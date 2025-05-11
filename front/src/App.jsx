@@ -1,17 +1,18 @@
-import './App.css';
+import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from './shared/Layout';
-import Dashboard from './pages/Dashboard';
-import ProductPage from './pages/Product';
-import LoginPage from './pages/Auth/Login';
-import RegisterPage from './pages/Auth/Register';
-import PrivateRoute from './component/PrivateRoute';
-import AdminDashboard from './AdminPages/Dashboard';
-import Unauthorized from './pages/Unauthorized';
+import Layout from "./shared/Layout";
+import Dashboard from "./pages/Dashboard";
+import ProductPage from "./pages/Product";
+import LoginPage from "./pages/Auth/Login";
+import RegisterPage from "./pages/Auth/Register";
+import PrivateRoute from "./component/PrivateRoute";
+import AdminDashboard from "./AdminPages/Dashboard";
+import AdminLayout from "./shared/AdminLayout";
+import Unauthorized from "./pages/Unauthorized";
 
 function App() {
   return (
-  <BrowserRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -25,7 +26,14 @@ function App() {
         </Route>
 
         <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={
+              <AdminLayout>
+                <AdminDashboard />
+              </AdminLayout>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
