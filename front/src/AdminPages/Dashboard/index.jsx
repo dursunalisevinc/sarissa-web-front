@@ -27,7 +27,7 @@ const Index = () => {
 
     return (
         <div>
-            Admin sayfası burası
+            Admin sayfası burasıdır
         </div>
     );
 };
