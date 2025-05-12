@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconBinaryTree,
   IconFeather,
@@ -10,24 +10,38 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import Tooltip from "../../component/Tooltip";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
 
+  const activePath = location.pathname;
   const menuItems = [
     {
+      id: "0",
+      pathname: "/admin",
       label: "Müşteriler",
       icon: <IconUsers className="w-5 h-5 min-w-5 min-h-5" />,
     },
     {
+      id: "1",
+      pathname: "/admin/variant",
       label: "Varyantlar(Özellikler)",
       icon: <IconFeather className="w-5 h-5 min-w-5 min-h-5" />,
     },
     {
+      id: "2",
+      pathname: "/admin/categories",
       label: "Katagoriler",
       icon: <IconBinaryTree className="w-5 h-5 min-w-5 min-h-5" />,
     },
   ];
+
+  const activeMenu = menuItems.find((oItem) => {
+    return oItem.pathname === location.pathname;
+  });
 
   return (
     <div className="flex h-screen">
@@ -52,7 +66,7 @@ const Sidebar = ({ children }) => {
             onClick={() => setIsOpen(!isOpen)}
             className={`flex items-center gap-3 ${
               isOpen ? "" : "justify-center"
-            } !px-3 !py-2 text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-slate-100 hover:text-slate-600`}
+            } !px-3 !py-2 text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400`}
           >
             <div>
               {isOpen ? (
@@ -66,13 +80,20 @@ const Sidebar = ({ children }) => {
         <div className="border-b border-slate-200 !mx-5"></div>
         {/* Menu */}
         <nav className="flex-1 !px-2 !py-4 space-y-2">
-          {menuItems.map((item, idx) => (
+          {menuItems.map((item) => (
             <Tooltip text={isOpen ? "" : item.label} position="right">
-              <div key={idx} className=" !mt-auto !px-2 !mb-2 truncate">
+              <div key={item.id} className=" !mt-auto !px-2 truncate">
                 <button
-                  className={`flex items-center gap-3 text-slate-500 ${
+                  onClick={() => {
+                    navigate(item.pathname);
+                  }}
+                  className={`flex items-center gap-3  border  ${
                     isOpen ? "" : "justify-center"
-                  } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-slate-100 hover:text-slate-600`}
+                  } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400 ${
+                    item.pathname === activePath
+                      ? " border-orange-200 bg-orange-50 text-orange-400"
+                      : "text-slate-500 border-transparent"
+                  }`}
                 >
                   {item.icon}
 
@@ -90,9 +111,16 @@ const Sidebar = ({ children }) => {
         <Tooltip text={isOpen ? "" : "Ayarlar"} position="right">
           <div className="!pt-4 !px-4 border-slate-200 mt-auto truncate">
             <button
-              className={`flex items-center gap-3 text-slate-500 ${
+              onClick={() => {
+                navigate("/admin/settings");
+              }}
+              className={`flex items-center gap-3  border  ${
                 isOpen ? "" : "justify-center"
-              } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-slate-100 hover:text-slate-600`}
+              } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400 ${
+                "/admin/settings" === activePath
+                  ? " border-orange-200 bg-orange-50 text-orange-400"
+                  : "text-slate-500 border-transparent"
+              }`}
             >
               <IconSettings2 className="w-5 h-5 min-w-5 min-h-5" />
 
@@ -106,7 +134,7 @@ const Sidebar = ({ children }) => {
             <button
               className={`flex items-center gap-3 ${
                 isOpen ? "" : "justify-center"
-              } !px-3 !py-2 w-full text-sm text-red-400 cursor-pointer hover:bg-red-50 hover:text-red-600 !rounded-lg transition-all duration-300 ease-in-out`}
+              } !px-3 !py-2 w-full text-sm text-red-400 cursor-pointer hover:bg-orange-50 hover:text-orange-400 !rounded-lg transition-all duration-300 ease-in-out`}
             >
               <IconLogout className="w-5 h-5 min-w-5 min-h-5" />
 
@@ -118,7 +146,14 @@ const Sidebar = ({ children }) => {
         </Tooltip>
       </aside>
       {/* Main content */}
-      <main className="flex-1 bg-gray-50 !p-6 overflow-auto">{children}</main>
+      <main className="flex-1 bg-white !py-4 !px-6 overflow-auto">
+        <nav className="flex items-center justify-between">
+          <span className="font-medium text-orange-300 text-xl">
+            {activePath === "/admin/settings" ? "Ayarlar" : activeMenu.label}
+          </span>
+        </nav>
+        {children}
+      </main>
     </div>
   );
 };
