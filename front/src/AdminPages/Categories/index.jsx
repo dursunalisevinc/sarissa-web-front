@@ -12,6 +12,8 @@ import {
 } from "@tabler/icons-react";
 import Box from "@mui/material/Box";
 import { useMessageBox } from "../../context/MessageBox";
+import { useModal } from "../../hooks/useModal";
+import Modal from "../../component/Modal";
 
 // Stil verilmiş özel TreeItem
 const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
@@ -139,69 +141,80 @@ const treeData = [
   },
 ];
 
-// Label bileşeni (tekrarı önlemek için)
-const TreeLabel = ({ node }) => {
+// Ana bileşen
+const Index = () => {
   const { openMessageBox } = useMessageBox();
+  const addModal = useModal();
+  const editModal = useModal();
+  const [activeCategori, setActiveCategori] = React.useState(null);
 
-  const handleOpenMessageBox = (deleteItem) => {
-    openMessageBox(
-      `Dikkat`,
-      <>
-        <b>{deleteItem.label}</b>
-        {` adlı grubu silmek üzeresiniz silmek istediğinize emin misiniz.`}
-      </>,
-      () => {
-        alert(`${node.id} idli kategoriyi sil`);
-      },
-      () => {
-        return; // vazgeçince çalışacak fonksiyon.
-      }
+  // Label bileşeni (tekrarı önlemek için)
+  const TreeLabel = ({ node }) => {
+    const handleOpenMessageBox = (deleteItem) => {
+      openMessageBox(
+        `Dikkat`,
+        <>
+          <b>{deleteItem.label}</b>
+          {` adlı grubu silmek üzeresiniz silmek istediğinize emin misiniz.`}
+        </>,
+        () => {
+          alert(`${node.id} idli kategoriyi sil`);
+        },
+        () => {
+          return; // vazgeçince çalışacak fonksiyon.
+        }
+      );
+    };
+
+    return (
+      <div className="w-full flex items-center justify-between">
+        {node?.label}
+        <div className="flex items-center gap-1 button-group">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveCategori(node);
+              addModal.openModal();
+            }}
+            className="rounded-lg bg-orange-50 !p-1 hover:bg-orange-100 border border-orange-200 text-orange-400 hover:text-orange-600 cursor-pointer"
+          >
+            <IconPlus size="1rem" stroke={1.25} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveCategori(node);
+              editModal.openModal();
+            }}
+            className="rounded-lg bg-orange-50 !p-1 hover:bg-orange-100 border border-orange-200 text-orange-400 hover:text-orange-600 cursor-pointer"
+          >
+            <IconPencil size="1rem" stroke={1.25} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenMessageBox(node);
+            }}
+            className="rounded-lg bg-rose-50 !p-1 hover:bg-rose-100 border border-rose-200 text-rose-400 hover:text-rose-600 cursor-pointer"
+          >
+            <IconTrash size="1rem" stroke={1.25} />
+          </button>
+        </div>
+      </div>
     );
   };
 
-  return (
-    <div className="w-full flex items-center justify-between">
-      {node?.label}
-      <div className="flex items-center gap-1 button-group">
-        <button
-          onClick={(e) => e.stopPropagation()}
-          className="rounded-lg bg-orange-50 !p-1 hover:bg-orange-100 border border-orange-200 text-orange-400 hover:text-orange-600 cursor-pointer"
-        >
-          <IconPlus size="1rem" stroke={1.25} />
-        </button>
-        <button
-          onClick={(e) => e.stopPropagation()}
-          className="rounded-lg bg-orange-50 !p-1 hover:bg-orange-100 border border-orange-200 text-orange-400 hover:text-orange-600 cursor-pointer"
-        >
-          <IconPencil size="1rem" stroke={1.25} />
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleOpenMessageBox(node);
-          }}
-          className="rounded-lg bg-rose-50 !p-1 hover:bg-rose-100 border border-rose-200 text-rose-400 hover:text-rose-600 cursor-pointer"
-        >
-          <IconTrash size="1rem" stroke={1.25} />
-        </button>
-      </div>
-    </div>
-  );
-};
+  const renderTree = (nodes) =>
+    nodes.map((node) => (
+      <CustomTreeItem
+        key={node.id}
+        itemId={node.id}
+        label={<TreeLabel node={node} />}
+      >
+        {node.children ? renderTree(node.children) : null}
+      </CustomTreeItem>
+    ));
 
-const renderTree = (nodes) =>
-  nodes.map((node) => (
-    <CustomTreeItem
-      key={node.id}
-      itemId={node.id}
-      label={<TreeLabel node={node} />}
-    >
-      {node.children ? renderTree(node.children) : null}
-    </CustomTreeItem>
-  ));
-
-// Ana bileşen
-const Index = () => {
   return (
     <>
       <Box
@@ -232,6 +245,28 @@ const Index = () => {
           {renderTree(treeData)}
         </SimpleTreeView>
       </Box>
+
+      <Modal
+        isOpen={addModal.isModalOpen}
+        title={"Kategori Ekle"}
+        onConfirm={() => {}}
+        onCancel={() => {
+          addModal.closeModal();
+        }}
+      >
+        <div>{activeCategori?.label}</div>
+      </Modal>
+
+      <Modal
+        isOpen={editModal.isModalOpen}
+        title={"Kategoriyi Düzenle"}
+        onConfirm={() => {}}
+        onCancel={() => {
+          editModal.closeModal();
+        }}
+      >
+        <div>{activeCategori?.label}</div>
+      </Modal>
     </>
   );
 };
