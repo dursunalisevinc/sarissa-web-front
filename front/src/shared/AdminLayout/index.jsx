@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import {
   IconBinaryTree,
+  IconBrandProducthunt,
   IconFeather,
   IconLayoutDashboard,
   IconLogout,
   IconMenu2,
+  IconPlus,
   IconSettings2,
   IconUsers,
   IconX,
+  IconZoomInArea,
 } from "@tabler/icons-react";
 import Tooltip from "../../component/Tooltip";
 import { useLocation, useNavigate } from "react-router-dom";
+import Products from '../../AdminPages/Products'
 
 const Sidebar = ({ children }) => {
   const location = useLocation();
@@ -23,21 +27,37 @@ const Sidebar = ({ children }) => {
       id: "0",
       pathname: "/admin",
       label: "Müşteriler",
-      icon: <IconUsers className="w-5 h-5 min-w-5 min-h-5" />,
+      icon: <IconUsers className="w-5 h-5 min-w-5 min-h-5s" />,
     },
     {
       id: "1",
       pathname: "/admin/variant",
       label: "Varyantlar(Özellikler)",
-      icon: <IconFeather className="w-5 h-5 min-w-5 min-h-5" />,
+      icon: <IconFeather className="w-5 h-5 min-w-5 min-h-5s" />,
     },
     {
       id: "2",
       pathname: "/admin/categories",
       label: "Katagoriler",
-      icon: <IconBinaryTree className="w-5 h-5 min-w-5 min-h-5" />,
+      icon: <IconBinaryTree className="w-5 h-5 min-w-5 min-h-5s" />,
+    },
+    {
+      id: "3",
+      pathname: "/admin/products",
+      label: "Ürünler",
+      icon: <IconZoomInArea className="w-5 h-5 min-w-5 min-h-5s" />,
     },
   ];
+
+  const buttonItems = {
+    "/admin/products": (
+    <Products/>
+    ),
+  };
+
+  const renderButton = () => {
+    return buttonItems[activePath] ? buttonItems[activePath] : null;
+  };
 
   const activeMenu = menuItems.find((oItem) => {
     return oItem.pathname === location.pathname;
@@ -82,7 +102,7 @@ const Sidebar = ({ children }) => {
         <nav className="flex-1 !px-2 !py-4 space-y-2">
           {menuItems.map((item) => (
             <Tooltip text={isOpen ? "" : item.label} position="right">
-              <div key={item.id} className=" !mt-auto !px-2 truncate">
+              <div key={item.id} className=" !mt-auto !px-2 truncate ">
                 <button
                   onClick={() => {
                     navigate(item.pathname);
@@ -151,6 +171,7 @@ const Sidebar = ({ children }) => {
           <span className="font-medium text-orange-300 text-xl">
             {activePath === "/admin/settings" ? "Ayarlar" : activeMenu.label}
           </span>
+          {renderButton()}
         </nav>
         {children}
       </main>
