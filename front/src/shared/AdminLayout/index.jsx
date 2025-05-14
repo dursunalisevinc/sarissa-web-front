@@ -14,9 +14,11 @@ import {
 } from "@tabler/icons-react";
 import Tooltip from "../../component/Tooltip";
 import { useLocation, useNavigate } from "react-router-dom";
-import Products from '../../AdminPages/Products'
-
+import Products from "../../AdminPages/Products";
+import { useModal } from "../../hooks/useModal";
+import Modal from "../../component/Modal";
 const Sidebar = ({ children }) => {
+  const addModal = useModal();
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
@@ -50,8 +52,17 @@ const Sidebar = ({ children }) => {
   ];
 
   const buttonItems = {
-    "/admin/products": (
-    <Products/>
+    "/admin/products": <Products />,
+    "/admin/categories": (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          addModal.openModal();
+        }}
+        className="rounded-lg bg-orange-50 !py-1 !px-3 hover:bg-orange-100 border border-orange-200 text-orange-400 hover:text-orange-600 cursor-pointer flex items-center"
+      >
+        <IconPlus className="!mr-2" size="1rem" stroke={1.25} /> Main katagori ekle
+      </button>
     ),
   };
 
@@ -175,6 +186,16 @@ const Sidebar = ({ children }) => {
         </nav>
         {children}
       </main>
+      <Modal
+        isOpen={addModal.isModalOpen}
+        title={"Kategori Ekle"}
+        onConfirm={() => {}}
+        onCancel={() => {
+          addModal.closeModal();
+        }}
+      >
+        <div>Modal içeriği</div>
+      </Modal>
     </div>
   );
 };
