@@ -1,231 +1,175 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemButton from "@mui/material/ListItemButton";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import { IconX, IconPlus } from "@tabler/icons-react";
-
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-
+import Table from "../../component/Table";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-const categories = [
-  {
-    name: "Ürün",
-  },
-  {
-    name: "Varyant",
-  },
-];
+
+const categories = [{ name: "Ürün" }, { name: "Varyant" }];
+
 const Index = () => {
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
-      <nav className="flex items-center justify-between">
-        <span className="font-medium text-orange-300 text-xl">Ürünler</span>
-
+      <nav className="flex items-center justify-between px-4 py-3 bg-white shadow-sm rounded-md mb-4 h-[62px]">
+        <span className="font-semibold text-xl text-orange-500">Ürünler</span>
         <button
-          onClick={handleClickOpen}
-          class="flex items-center rounded-md border border-orange-200 !py-2 !px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-orange-400 hover:text-white hover:bg-orange-500 hover:border-orange-500  focus:border-orange-500 active:border-orange-500 active:text-white active:bg-orange-500 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none cursor-pointer"
-          type="button"
+          onClick={() => setOpen(true)}
+          className="flex items-center gap-2 rounded-md border border-orange-300 bg-white px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-500 hover:text-white hover:shadow-md transition cursor-pointer"
         >
-          <IconPlus className="!mr-2" size={"1rem"} /> Ürün Ekle
+          <IconPlus size={16} />
+          Ürün Ekle
         </button>
       </nav>
 
+      <div className="h-[calc(100vh-7.5rem)]">
+        <Table />
+      </div>
+
       <Dialog
-        fullScreen
+        sx={{ ".MuiPaper-root": { borderRadius: "1rem" } }}
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         TransitionComponent={Transition}
       >
-        <div className="flex h-screen w-full !px-4 !mt-4">
-          <div className="w-full">
+        <div className="h-full px-6 pt-6  ">
+          <div className="flex items-center justify-between mb-4">
             <TabGroup>
-              <div className="w-full flex items-center justify-between">
-                <TabList className="flex gap-4">
+              <div className="flex items-center justify-center w-full">
+                <TabList className=" flex gap-2 w-full ">
                   {categories.map(({ name }) => (
                     <Tab
                       key={name}
-                      className="rounded-lg !px-3 !py-1 text-sm/6 font-semibold text-orange-400 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-orange-500 data-hover:bg-orange-500/5 data-selected:bg-orange-500/10 data-selected:data-hover:bg-orange-500/10 cursor-pointer"
+                      className={({ selected }) =>
+                        `rounded-md px-4 py-2 text-sm font-medium w-1/2 cursor-pointer ${
+                          selected
+                            ? "bg-orange-100 text-orange-600"
+                            : "text-orange-500 hover:bg-orange-50"
+                        } transition`
+                      }
                     >
                       {name}
                     </Tab>
                   ))}
                 </TabList>
-                <button
-                  onClick={handleClose}
-                  className="rounded-full hover:bg-orange-100 !p-1.5 text-orange-400 hover:text-orange-500 cursor-pointer"
-                >
-                  <IconX size={"1.25rem"} stroke={2} />
-                </button>
               </div>
-              <TabPanels className="!mt-3">
-                {/* Ürün Adı - Barkod - Ana Katagori:selected - Katagori:select - Alt Katagori - Fiyat - Vergi - Stok:number - marka - Açıklama - resim ekleme*/}
-                <TabPanel key={"Ürün"} className="rounded-xl !p-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Ürün Adı
+
+              <TabPanels className="mt-4">
+                <TabPanel>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-gray-700">
+                      Resim Ekle
+                    </label>
+                    <input
+                      type="file"
+                      className="px-4 py-2 mb-3 rounded-md border border-gray-200 bg-white file:text-orange-500 file:border-0 file:bg-orange-100 file:px-3 file:py-1 hover:file:bg-orange-200 transition"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { label: "Ürün Adı", type: "text" },
+                      { label: "Barkod", type: "text" },
+                      { label: "Fiyat", type: "text" },
+                      { label: "Vergi", type: "text" },
+                      { label: "Stok", type: "text" },
+                      { label: "Marka", type: "text" },
+                      { label: "Açıklama", type: "text" },
+                    ].map(({ label, type }, i) => (
+                      <div className="flex flex-col gap-2" key={i}>
+                        <label className="text-sm font-medium text-gray-700">
+                          {label}
+                        </label>
+                        <input
+                          type={type}
+                          placeholder={`örn. ${label}`}
+                          className="w-[17rem] px-4 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                        />
+                      </div>
+                    ))}
+
+                    {["Ana Kategori", "Kategori", "Alt Kategori"].map(
+                      (label, i) => (
+                        <div className="flex flex-col gap-2" key={i}>
+                          <label className="text-sm font-medium text-gray-700">
+                            {label}
+                          </label>
+                          <select className="px-4 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-400 transition">
+                            <option>Volvo</option>
+                            <option>Saab</option>
+                            <option>Mercedes</option>
+                            <option>Audi</option>
+                          </select>
+                        </div>
+                      )
+                    )}
+                  </div>
+                  <div className="mt-4 flex items-center justify-end gap-3">
+                    <button
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                      className=" border border-green-500 text-green-500 hover:text-white font-medium !px-4 !py-1.5 rounded-xl hover:bg-green-500 duration-300 cursor-pointer"
+                    >
+                      Vazgeç
+                    </button>
+                    <button className=" bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
+                      Kategori Ekle
+                    </button>
+                  </div>
+                </TabPanel>
+                <TabPanel>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { label: "Ürün Adı", type: "text" },
+                      { label: "Barkod", type: "text" },
+                      { label: "Fiyat", type: "text" },
+                      { label: "Vergi", type: "text" },
+                      { label: "Stok", type: "text" },
+                      { label: "Marka", type: "text" },
+                      { label: "Açıklama", type: "text" },
+                    ].map(({ label, type }, i) => (
+                      <div className="flex flex-col gap-2" key={i}>
+                        <label className="text-sm font-medium text-gray-700">
+                          {label}
+                        </label>
+                        <input
+                          type={type}
+                          placeholder={`örn. ${label}`}
+                          className="w-[17rem] px-4 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                        />
+                      </div>
+                    ))}
+
+                    {["Ana Kategori", "Kategori", "Alt Kategori"].map(
+                      (label, i) => (
+                        <div className="flex flex-col gap-2" key={i}>
+                          <label className="text-sm font-medium text-gray-700">
+                            {label}
+                          </label>
+                          <select className="px-4 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-400 transition">
+                            <option>Volvo</option>
+                            <option>Saab</option>
+                            <option>Mercedes</option>
+                            <option>Audi</option>
+                          </select>
+                        </div>
+                      )
+                    )}
+
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        Resim Ekle
                       </label>
                       <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
-                        type="text"
-                        id="html"
-                        name="fav_language"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Barkod
-                      </label>
-                      <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
-                        type="text"
-                        id="html"
-                        name="fav_language"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label className="text-slate-700 font-medium" for="cars">
-                        Ana Katagori
-                      </label>
-                      <select
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        name="cars"
-                        id="cars"
-                      >
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label className="text-slate-700 font-medium" for="cars">
-                        Katagori
-                      </label>
-                      <select
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        name="cars"
-                        id="cars"
-                      >
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label className="text-slate-700 font-medium" for="cars">
-                        Alt Katagori
-                      </label>
-                      <select
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        name="cars"
-                        id="cars"
-                      >
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Fiyat
-                      </label>
-                      <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
-                        type="text"
-                        id="html"
-                        name="fav_language"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Vergi{" "}
-                      </label>
-                      <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
-                        type="text"
-                        id="html"
-                        name="fav_language"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Stok{" "}
-                      </label>
-                      <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
-                        type="text"
-                        id="html"
-                        name="fav_language"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Marka{" "}
-                      </label>
-                      <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
-                        type="text"
-                        id="html"
-                        name="fav_language"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Açıklama{" "}
-                      </label>
-                      <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
-                        type="text"
-                        id="html"
-                        name="fav_language"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <label className="text-slate-700 font-medium" for="html">
-                        Resim ekle
-                      </label>
-                      <input
-                        className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                        placeholder="örn. Çocuk & Giyim"
                         type="file"
-                        id="html"
-                        name="fav_language"
+                        className="px-4 py-2 rounded-md border border-gray-200 bg-white file:text-orange-500 file:border-0 file:bg-orange-100 file:px-3 file:py-1 hover:file:bg-orange-200 transition"
                       />
                     </div>
                   </div>
-                </TabPanel>
-                <TabPanel key={"Varyant"} className="rounded-xl !p-3">
-                  <ul>Varyant</ul>
                 </TabPanel>
               </TabPanels>
             </TabGroup>
@@ -235,4 +179,5 @@ const Index = () => {
     </>
   );
 };
+
 export default Index;

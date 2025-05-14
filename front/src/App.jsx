@@ -10,6 +10,8 @@ import AdminLayout from "./shared/AdminLayout";
 import Unauthorized from "./pages/Unauthorized";
 import ProductDetail from "./pages/ProductDetails";
 import Products from "./AdminPages/Products";
+import Customers from "./AdminPages/Customers";
+import Variants from "./AdminPages/Variants";
 import Categories from "./AdminPages/Categories";
 import { MessageBoxProvider } from "./context/MessageBox";
 import { ToastContainer } from 'react-toastify';
@@ -43,10 +45,18 @@ function App() {
               }
             />
             <Route
+              path="/admin/customers"
+              element={
+                <AdminLayout>
+                  <Customers />
+                </AdminLayout>
+              }
+            />
+            <Route
               path="/admin/variant"
               element={
                 <AdminLayout>
-                  <AdminDashboard />
+                  <Variants />
                 </AdminLayout>
               }
             />

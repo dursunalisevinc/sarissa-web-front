@@ -6,6 +6,7 @@ import {
   IconFeather,
   IconLayoutDashboard,
   IconLogout,
+  IconManualGearboxFilled,
   IconMenu2,
   IconPlus,
   IconSettings2,
@@ -27,8 +28,14 @@ const Sidebar = ({ children }) => {
   const activePath = location.pathname;
   const menuItems = [
     {
-      id: "0",
+      id: "a",
       pathname: "/admin",
+      label: "Ana Sayfa",
+      icon: <IconLayoutDashboard className="w-5 h-5 min-w-5 min-h-5s" />,
+    },
+    {
+      id: "0",
+      pathname: "/admin/customers",
       label: "Müşteriler",
       icon: <IconUsers className="w-5 h-5 min-w-5 min-h-5s" />,
     },
@@ -52,7 +59,6 @@ const Sidebar = ({ children }) => {
     },
   ];
 
-
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -68,7 +74,7 @@ const Sidebar = ({ children }) => {
               isOpen ? "block" : "hidden"
             } !px-3 flex items-center font-medium text-lg text-slate-700`}
           >
-            <IconLayoutDashboard className="w-5 h-5 min-w-5 min-h-5 !mr-3" />
+            <IconManualGearboxFilled className="w-5 h-5 min-w-5 min-h-5 !mr-3" />
             Yönetim
           </span>
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 import {
   IconFolder,
@@ -17,10 +17,15 @@ import { useMessageBox } from "../../context/MessageBox";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../../component/Modal";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { addCategory, addSubCategory, createMainCategory, getCategoriesByMainId, getMainCategories } from "../../Api/categoryService";
+import {
+  addCategory,
+  addSubCategory,
+  createMainCategory,
+  getCategoriesByMainId,
+  getMainCategories,
+} from "../../Api/categoryService";
 import { useState } from "react";
 import { useEffect } from "react";
-
 
 // Stil verilmiş özel TreeItem
 const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
@@ -159,13 +164,13 @@ const Index = () => {
   const [mainCateData, setMainCateData] = useState();
   const [categoryItem, setCategoryItem] = useState({
     name: "",
-    id: ""
+    id: "",
   });
   const [categoryData, setCategoryData] = useState([]);
   const [subCategoryItem, setSubCategoryItem] = useState({
     mainCatId: "",
     catId: "",
-    name: ""
+    name: "",
   });
 
   // Label bileşeni (tekrarı önlemek için)
@@ -225,12 +230,14 @@ const Index = () => {
   };
 
   useEffect(() => {
-    getMainCategories().then((oResponse) => {
-      console.log(oResponse.data.mainCategories);
-      setMainCateData(oResponse.data.mainCategories);
-    }).catch((oError) => {
-      console.log(oError);
-    })
+    getMainCategories()
+      .then((oResponse) => {
+        console.log(oResponse.data.mainCategories);
+        setMainCateData(oResponse.data.mainCategories);
+      })
+      .catch((oError) => {
+        console.log(oError);
+      });
   }, []);
 
   const handleMainCategory = (value) => {
@@ -251,34 +258,37 @@ const Index = () => {
   };
 
   const submitCategory = (id, name) => {
-    addCategory(name, id).then(() => {
-      toast.success("✅ Kategori başarıyla eklendi!");
-
-    }).catch(() => {
-      const errorMsg = err?.response?.data?.message || "Bir hata oluştu.";
-      toast.error(`❌ ${errorMsg}`);
-    })
+    addCategory(name, id)
+      .then(() => {
+        toast.success("✅ Kategori başarıyla eklendi!");
+      })
+      .catch(() => {
+        const errorMsg = err?.response?.data?.message || "Bir hata oluştu.";
+        toast.error(`❌ ${errorMsg}`);
+      });
   };
 
   const submitSubCategory = (name, mainCategoryId, parentCategoryId) => {
-    addSubCategory(name, mainCategoryId, parentCategoryId).then((oResponse) => {
-      toast.success("✅ Kategori başarıyla eklendi!");
-    }).catch((oError) => {
-      const errorMsg = err?.response?.data?.message || "Bir hata oluştu.";
-      toast.error(`❌ ${errorMsg}`);
-    });
-  }
+    addSubCategory(name, mainCategoryId, parentCategoryId)
+      .then((oResponse) => {
+        toast.success("✅ Kategori başarıyla eklendi!");
+      })
+      .catch((oError) => {
+        const errorMsg = err?.response?.data?.message || "Bir hata oluştu.";
+        toast.error(`❌ ${errorMsg}`);
+      });
+  };
 
   useEffect(() => {
     // console.log(categoryItem);
-    getCategoriesByMainId(subCategoryItem["mainCatId"]).then((oResponse) => {
-      console.log(oResponse.data.categories);
-      setCategoryData(oResponse.data.categories);
-
-    }).catch((oError) => {
-      setCategoryData([]);
-
-    });
+    getCategoriesByMainId(subCategoryItem["mainCatId"])
+      .then((oResponse) => {
+        console.log(oResponse.data.categories);
+        setCategoryData(oResponse.data.categories);
+      })
+      .catch((oError) => {
+        setCategoryData([]);
+      });
   }, [subCategoryItem]);
 
   const renderTree = (nodes) =>
@@ -294,25 +304,26 @@ const Index = () => {
 
   return (
     <>
-      <nav className="flex items-center justify-between">
-        <span className="font-medium text-orange-300 text-xl">Katagoriler</span>
-
+      <nav className="flex items-center justify-between px-4 py-3 bg-white shadow-sm rounded-md mb-4 h-[62px]">
+        <span className="font-semibold text-xl text-orange-500">
+          Katagoriler
+        </span>
         <button
           onClick={(e) => {
             e.stopPropagation();
             mainAddModal.openModal();
           }}
-          className="rounded-lg bg-orange-50 !py-1 !px-3 hover:bg-orange-100 border border-orange-200 text-orange-400 hover:text-orange-600 cursor-pointer flex items-center"
+          className="flex items-center gap-2 rounded-md border border-orange-300 bg-white px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-500 hover:text-white hover:shadow-md transition cursor-pointer"
         >
-          <IconPlus className="!mr-2" size="1rem" stroke={1.25} /> Main kategori
-          ekle
+          <IconPlus size={16} />
+          Main Kategori Ekle
         </button>
       </nav>
       <Box
         display="flex"
         alignItems="flex-start"
         height="100%"
-        sx={{ pt: 2, height: "calc(100vh - 4.2rem)" }}
+        sx={{ height: "calc(100vh - 4.2rem)" }}
       >
         <SimpleTreeView
           defaultExpandedItems={["1", "3"]}
@@ -340,7 +351,7 @@ const Index = () => {
       <Modal
         isOpen={addModal.isModalOpen}
         title={"Kategori Ekle"}
-        onConfirm={() => { }}
+        onConfirm={() => {}}
         onCancel={() => {
           addModal.closeModal();
         }}
@@ -351,7 +362,7 @@ const Index = () => {
       <Modal
         isOpen={editModal.isModalOpen}
         title={"Kategoriyi Düzenle"}
-        onConfirm={() => { }}
+        onConfirm={() => {}}
         onCancel={() => {
           editModal.closeModal();
         }}
@@ -361,7 +372,7 @@ const Index = () => {
       <Modal
         isOpen={mainAddModal.isModalOpen}
         title={"Kategori Ekle"}
-        onConfirm={() => { }}
+        onConfirm={() => {}}
         onCancel={() => {
           mainAddModal.closeModal();
         }}
@@ -393,7 +404,10 @@ const Index = () => {
                   name="fav_language"
                 />
                 <div className="flex justify-end !pt-2">
-                  <button onClick={() => submitMainCategory(mainCategoryText)} className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
+                  <button
+                    onClick={() => submitMainCategory(mainCategoryText)}
+                    className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer"
+                  >
                     Kategori Ekle
                   </button>
                 </div>
@@ -411,9 +425,11 @@ const Index = () => {
                     id="cars"
                     onChange={(e) => {
                       const selectedId = e.target.value;
-                      const selectedItem = mainCateData.find(item => item.id.toString() === selectedId);
+                      const selectedItem = mainCateData.find(
+                        (item) => item.id.toString() === selectedId
+                      );
 
-                      setCategoryItem(prev => ({
+                      setCategoryItem((prev) => ({
                         ...prev,
                         id: selectedItem.id,
                       }));
@@ -426,7 +442,6 @@ const Index = () => {
                         </option>
                       ))}
                   </select>
-
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-slate-700 font-medium" for="html">
@@ -436,7 +451,7 @@ const Index = () => {
                     className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
                     placeholder="örn. Çocuk & Giyim"
                     onChange={(e) => {
-                      setCategoryItem(prev => ({
+                      setCategoryItem((prev) => ({
                         ...prev,
                         name: e.target.value,
                       }));
@@ -447,7 +462,12 @@ const Index = () => {
                   />
                 </div>
                 <div className="flex justify-end !pt-2">
-                  <button onClick={() => submitCategory(categoryItem["id"], categoryItem["name"])} className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
+                  <button
+                    onClick={() =>
+                      submitCategory(categoryItem["id"], categoryItem["name"])
+                    }
+                    className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer"
+                  >
                     Kategori Ekle
                   </button>
                 </div>
@@ -465,26 +485,22 @@ const Index = () => {
                     id="cars"
                     onChange={(e) => {
                       const selectedId = e.target.value;
-                      const selectedItem = mainCateData.find(item => item.id.toString() === selectedId);
-                      setSubCategoryItem(prev => ({
+                      const selectedItem = mainCateData.find(
+                        (item) => item.id.toString() === selectedId
+                      );
+                      setSubCategoryItem((prev) => ({
                         ...prev,
                         mainCatId: selectedItem.id,
                       }));
                     }}
                   >
-                    {
-                      mainCateData &&
+                    {mainCateData &&
                       mainCateData.map((oItem, oIndex) => {
-                        return (
-                          <option value={oItem.id}>{oItem.name}</option>
-                        )
-                      })
-                    }
-
+                        return <option value={oItem.id}>{oItem.name}</option>;
+                      })}
                   </select>
                 </div>
-                {
-                  categoryData && categoryData.length > 0 &&
+                {categoryData && categoryData.length > 0 && (
                   <div className="flex flex-col gap-1">
                     <label className="text-slate-700 font-medium" for="cars">
                       Katagori
@@ -495,24 +511,26 @@ const Index = () => {
                       id="cars"
                       onChange={(e) => {
                         const selectedId = e.target.value;
-                        const selectedItem = mainCateData.find(item => item.id.toString() === selectedId);
-                        setSubCategoryItem(prev => ({
+                        const selectedItem = mainCateData.find(
+                          (item) => item.id.toString() === selectedId
+                        );
+                        setSubCategoryItem((prev) => ({
                           ...prev,
                           catId: selectedItem.id,
                         }));
                       }}
                     >
-                      {
-                        categoryData &&
+                      {categoryData &&
                         categoryData?.map((oItem, oIndex) => {
                           return (
-                            <option key={oIndex} value={oItem.id}>{oItem.name}</option>
-                          )
-                        })
-                      }
+                            <option key={oIndex} value={oItem.id}>
+                              {oItem.name}
+                            </option>
+                          );
+                        })}
                     </select>
                   </div>
-                }
+                )}
 
                 <div className="flex flex-col gap-1">
                   <label className="text-slate-700 font-medium" for="html">
@@ -526,15 +544,24 @@ const Index = () => {
                     name="fav_language"
                     onChange={(e) => {
                       const value = e.target.value;
-                      setSubCategoryItem(prev => ({
+                      setSubCategoryItem((prev) => ({
                         ...prev,
-                        name: value
+                        name: value,
                       }));
                     }}
                   />
                 </div>
                 <div className="flex justify-end !pt-2">
-                  <button onClick={() => submitSubCategory(subCategoryItem.name, subCategoryItem.mainCatId, subCategoryItem.catId)} className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
+                  <button
+                    onClick={() =>
+                      submitSubCategory(
+                        subCategoryItem.name,
+                        subCategoryItem.mainCatId,
+                        subCategoryItem.catId
+                      )
+                    }
+                    className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer"
+                  >
                     Kategori Ekle
                   </button>
                 </div>
