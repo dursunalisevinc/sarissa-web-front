@@ -2,7 +2,6 @@ import { IconX } from "@tabler/icons-react";
 import React, { useEffect } from "react";
 
 const Index = ({ isOpen, title, children, onCancel }) => {
-  console.log({isOpen, title, onCancel});
   
   if (!isOpen) return null; // Modal sadece açık olduğunda render edilir.
 

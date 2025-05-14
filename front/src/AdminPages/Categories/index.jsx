@@ -2,6 +2,8 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
+import { toast } from 'react-toastify';
+
 import {
   IconFolder,
   IconFolderOpen,
@@ -15,6 +17,10 @@ import { useMessageBox } from "../../context/MessageBox";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../../component/Modal";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import { addCategory, addSubCategory, createMainCategory, getCategoriesByMainId, getMainCategories } from "../../Api/categoryService";
+import { useState } from "react";
+import { useEffect } from "react";
+
 
 // Stil verilmiş özel TreeItem
 const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
@@ -149,6 +155,18 @@ const Index = () => {
   const mainAddModal = useModal();
   const editModal = useModal();
   const [activeCategori, setActiveCategori] = React.useState(null);
+  const [mainCategoryText, setMainCategorytext] = useState("");
+  const [mainCateData, setMainCateData] = useState();
+  const [categoryItem, setCategoryItem] = useState({
+    name: "",
+    id: ""
+  });
+  const [categoryData, setCategoryData] = useState([]);
+  const [subCategoryItem, setSubCategoryItem] = useState({
+    mainCatId: "",
+    catId: "",
+    name: ""
+  });
 
   // Label bileşeni (tekrarı önlemek için)
   const TreeLabel = ({ node }) => {
@@ -205,6 +223,63 @@ const Index = () => {
       </div>
     );
   };
+
+  useEffect(() => {
+    getMainCategories().then((oResponse) => {
+      console.log(oResponse.data.mainCategories);
+      setMainCateData(oResponse.data.mainCategories);
+    }).catch((oError) => {
+      console.log(oError);
+    })
+  }, []);
+
+  const handleMainCategory = (value) => {
+    setMainCategorytext(value);
+  };
+  const submitMainCategory = (name) => {
+    createMainCategory(name)
+      .then((res) => {
+        toast.success("✅ANA Kategori başarıyla eklendi!");
+        console.log("Başarılı:", res.data);
+        setMainCategorytext("");
+      })
+      .catch((err) => {
+        const errorMsg = err?.response?.data?.message || "Bir hata oluştu.";
+        toast.error(`❌ ${errorMsg}`);
+        console.error("Hata:", err);
+      });
+  };
+
+  const submitCategory = (id, name) => {
+    addCategory(name, id).then(() => {
+      toast.success("✅ Kategori başarıyla eklendi!");
+
+    }).catch(() => {
+      const errorMsg = err?.response?.data?.message || "Bir hata oluştu.";
+      toast.error(`❌ ${errorMsg}`);
+    })
+  };
+
+  const submitSubCategory = (name, mainCategoryId, parentCategoryId) => {
+    addSubCategory(name, mainCategoryId, parentCategoryId).then((oResponse) => {
+      toast.success("✅ Kategori başarıyla eklendi!");
+    }).catch((oError) => {
+      const errorMsg = err?.response?.data?.message || "Bir hata oluştu.";
+      toast.error(`❌ ${errorMsg}`);
+    });
+  }
+
+  useEffect(() => {
+    // console.log(categoryItem);
+    getCategoriesByMainId(subCategoryItem["mainCatId"]).then((oResponse) => {
+      console.log(oResponse.data.categories);
+      setCategoryData(oResponse.data.categories);
+
+    }).catch((oError) => {
+      setCategoryData([]);
+
+    });
+  }, [subCategoryItem]);
 
   const renderTree = (nodes) =>
     nodes.map((node) => (
@@ -265,7 +340,7 @@ const Index = () => {
       <Modal
         isOpen={addModal.isModalOpen}
         title={"Kategori Ekle"}
-        onConfirm={() => {}}
+        onConfirm={() => { }}
         onCancel={() => {
           addModal.closeModal();
         }}
@@ -276,7 +351,7 @@ const Index = () => {
       <Modal
         isOpen={editModal.isModalOpen}
         title={"Kategoriyi Düzenle"}
-        onConfirm={() => {}}
+        onConfirm={() => { }}
         onCancel={() => {
           editModal.closeModal();
         }}
@@ -286,7 +361,7 @@ const Index = () => {
       <Modal
         isOpen={mainAddModal.isModalOpen}
         title={"Kategori Ekle"}
-        onConfirm={() => {}}
+        onConfirm={() => { }}
         onCancel={() => {
           mainAddModal.closeModal();
         }}
@@ -310,6 +385,7 @@ const Index = () => {
                   Ana Kategori
                 </label>
                 <input
+                  onChange={(e) => handleMainCategory(e.target.value)}
                   className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
                   placeholder="örn. Erkek"
                   type="text"
@@ -317,7 +393,7 @@ const Index = () => {
                   name="fav_language"
                 />
                 <div className="flex justify-end !pt-2">
-                  <button className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
+                  <button onClick={() => submitMainCategory(mainCategoryText)} className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
                     Kategori Ekle
                   </button>
                 </div>
@@ -333,12 +409,24 @@ const Index = () => {
                     className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
                     name="cars"
                     id="cars"
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      const selectedItem = mainCateData.find(item => item.id.toString() === selectedId);
+
+                      setCategoryItem(prev => ({
+                        ...prev,
+                        id: selectedItem.id,
+                      }));
+                    }}
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    {mainCateData &&
+                      mainCateData.map((oItem) => (
+                        <option key={oItem.id} value={oItem.id}>
+                          {oItem.name}
+                        </option>
+                      ))}
                   </select>
+
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-slate-700 font-medium" for="html">
@@ -347,13 +435,19 @@ const Index = () => {
                   <input
                     className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
                     placeholder="örn. Çocuk & Giyim"
+                    onChange={(e) => {
+                      setCategoryItem(prev => ({
+                        ...prev,
+                        name: e.target.value,
+                      }));
+                    }}
                     type="text"
                     id="html"
                     name="fav_language"
                   />
                 </div>
                 <div className="flex justify-end !pt-2">
-                  <button className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
+                  <button onClick={() => submitCategory(categoryItem["id"], categoryItem["name"])} className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
                     Kategori Ekle
                   </button>
                 </div>
@@ -369,28 +463,57 @@ const Index = () => {
                     className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
                     name="cars"
                     id="cars"
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      const selectedItem = mainCateData.find(item => item.id.toString() === selectedId);
+                      setSubCategoryItem(prev => ({
+                        ...prev,
+                        mainCatId: selectedItem.id,
+                      }));
+                    }}
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    {
+                      mainCateData &&
+                      mainCateData.map((oItem, oIndex) => {
+                        return (
+                          <option value={oItem.id}>{oItem.name}</option>
+                        )
+                      })
+                    }
+
                   </select>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-slate-700 font-medium" for="cars">
-                    Ana Katagori
-                  </label>
-                  <select
-                    className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
-                    name="cars"
-                    id="cars"
-                  >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                  </select>
-                </div>
+                {
+                  categoryData && categoryData.length > 0 &&
+                  <div className="flex flex-col gap-1">
+                    <label className="text-slate-700 font-medium" for="cars">
+                      Katagori
+                    </label>
+                    <select
+                      className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300"
+                      name="cars"
+                      id="cars"
+                      onChange={(e) => {
+                        const selectedId = e.target.value;
+                        const selectedItem = mainCateData.find(item => item.id.toString() === selectedId);
+                        setSubCategoryItem(prev => ({
+                          ...prev,
+                          catId: selectedItem.id,
+                        }));
+                      }}
+                    >
+                      {
+                        categoryData &&
+                        categoryData?.map((oItem, oIndex) => {
+                          return (
+                            <option key={oIndex} value={oItem.id}>{oItem.name}</option>
+                          )
+                        })
+                      }
+                    </select>
+                  </div>
+                }
+
                 <div className="flex flex-col gap-1">
                   <label className="text-slate-700 font-medium" for="html">
                     Kategori
@@ -401,10 +524,17 @@ const Index = () => {
                     type="text"
                     id="html"
                     name="fav_language"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSubCategoryItem(prev => ({
+                        ...prev,
+                        name: value
+                      }));
+                    }}
                   />
                 </div>
                 <div className="flex justify-end !pt-2">
-                  <button className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
+                  <button onClick={() => submitSubCategory(subCategoryItem.name, subCategoryItem.mainCatId, subCategoryItem.catId)} className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">
                     Kategori Ekle
                   </button>
                 </div>

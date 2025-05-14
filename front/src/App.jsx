@@ -12,68 +12,74 @@ import ProductDetail from "./pages/ProductDetails";
 import Products from "./AdminPages/Products";
 import Categories from "./AdminPages/Categories";
 import { MessageBoxProvider } from "./context/MessageBox";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
-    <MessageBoxProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
+    <div>
+      <ToastContainer />
+      <MessageBoxProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* <Route element={<PrivateRoute allowedRoles={["user"]} />}> */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="product/:id" element={<ProductDetail />} />
-          </Route>
-          {/* </Route> */}
+            {/* <Route element={<PrivateRoute allowedRoles={["user"]} />}> */}
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="product/:id" element={<ProductDetail />} />
+            </Route>
+            {/* </Route> */}
 
-          {/* <Route element={<PrivateRoute allowedRoles={["admin"]} />}> */}
-          <Route
-            path="/admin/"
-            element={
-              <AdminLayout>
-                <AdminDashboard />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/admin/variant"
-            element={
-              <AdminLayout>
-                <AdminDashboard />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/admin/categories"
-            element={
-              <AdminLayout>
-                <Categories />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/admin/products"
-            element={
-              <AdminLayout>
-                <Products />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/admin/settings"
-            element={
-              <AdminLayout>
-                <Products />
-              </AdminLayout>
-            }
-          />
-          {/* </Route> */}
-        </Routes>
-      </BrowserRouter>
-    </MessageBoxProvider>
+            {/* <Route element={<PrivateRoute allowedRoles={["admin"]} />}> */}
+            <Route
+              path="/admin/"
+              element={
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/admin/variant"
+              element={
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <AdminLayout>
+                  <Categories />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/admin/products"
+              element={
+                <AdminLayout>
+                  <Products />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <AdminLayout>
+                  <Products />
+                </AdminLayout>
+              }
+            />
+            {/* </Route> */}
+          </Routes>
+        </BrowserRouter>
+      </MessageBoxProvider>
+    </div>
+
   );
 }
 
