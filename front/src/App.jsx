@@ -9,7 +9,7 @@ import AdminDashboard from "./AdminPages/Dashboard";
 import AdminLayout from "./shared/AdminLayout";
 import Unauthorized from "./pages/Unauthorized";
 import ProductDetail from "./pages/ProductDetails";
-import Products from "./AdminPages/Products"
+import Products from "./AdminPages/Products";
 import Categories from "./AdminPages/Categories";
 import { MessageBoxProvider } from "./context/MessageBox";
 
@@ -58,15 +58,15 @@ function App() {
             path="/admin/products"
             element={
               <AdminLayout>
-                <AdminDashboard />
-                </AdminLayout>
+                <Products />
+              </AdminLayout>
             }
           />
           <Route
             path="/admin/settings"
             element={
               <AdminLayout>
-                <AdminDashboard />
+                <Products />
               </AdminLayout>
             }
           />

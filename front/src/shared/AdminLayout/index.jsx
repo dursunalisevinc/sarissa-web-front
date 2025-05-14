@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import {
   IconBinaryTree,
   IconBrandProducthunt,
@@ -52,28 +52,6 @@ const Sidebar = ({ children }) => {
     },
   ];
 
-  const buttonItems = {
-    "/admin/products": <Products />,
-    "/admin/categories": (
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          addModal.openModal();
-        }}
-        className="rounded-lg bg-orange-50 !py-1 !px-3 hover:bg-orange-100 border border-orange-200 text-orange-400 hover:text-orange-600 cursor-pointer flex items-center"
-      >
-        <IconPlus className="!mr-2" size="1rem" stroke={1.25} /> Main kategori ekle
-      </button>
-    ),
-  };
-
-  const renderButton = () => {
-    return buttonItems[activePath] ? buttonItems[activePath] : null;
-  };
-
-  const activeMenu = menuItems.find((oItem) => {
-    return oItem.pathname === location.pathname;
-  });
 
   return (
     <div className="flex h-screen">
@@ -86,8 +64,9 @@ const Sidebar = ({ children }) => {
 
         <div className="!pb-3 !pt-4 !px-4 border-slate-200 mt-auto flex items-center justify-between truncate">
           <span
-            className={`${isOpen ? "block" : "hidden"
-              } !px-3 flex items-center font-medium text-lg text-slate-700`}
+            className={`${
+              isOpen ? "block" : "hidden"
+            } !px-3 flex items-center font-medium text-lg text-slate-700`}
           >
             <IconLayoutDashboard className="w-5 h-5 min-w-5 min-h-5 !mr-3" />
             Yönetim
@@ -95,8 +74,9 @@ const Sidebar = ({ children }) => {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`flex items-center gap-3 ${isOpen ? "" : "justify-center"
-              } !px-3 !py-2 text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400`}
+            className={`flex items-center gap-3 ${
+              isOpen ? "" : "justify-center"
+            } !px-3 !py-2 text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400`}
           >
             <div>
               {isOpen ? (
@@ -117,11 +97,13 @@ const Sidebar = ({ children }) => {
                   onClick={() => {
                     navigate(item.pathname);
                   }}
-                  className={`flex items-center gap-3  border  ${isOpen ? "" : "justify-center"
-                    } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400 ${item.pathname === activePath
+                  className={`flex items-center gap-3  border  ${
+                    isOpen ? "" : "justify-center"
+                  } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400 ${
+                    item.pathname === activePath
                       ? " border-orange-200 bg-orange-50 text-orange-400"
                       : "text-slate-500 border-transparent"
-                    }`}
+                  }`}
                 >
                   {item.icon}
 
@@ -142,11 +124,13 @@ const Sidebar = ({ children }) => {
               onClick={() => {
                 navigate("/admin/settings");
               }}
-              className={`flex items-center gap-3  border  ${isOpen ? "" : "justify-center"
-                } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400 ${"/admin/settings" === activePath
+              className={`flex items-center gap-3  border  ${
+                isOpen ? "" : "justify-center"
+              } !px-3 !py-2 w-full text-sm !rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-orange-50 hover:text-orange-400 ${
+                "/admin/settings" === activePath
                   ? " border-orange-200 bg-orange-50 text-orange-400"
                   : "text-slate-500 border-transparent"
-                }`}
+              }`}
             >
               <IconSettings2 className="w-5 h-5 min-w-5 min-h-5" />
 
@@ -158,8 +142,9 @@ const Sidebar = ({ children }) => {
         <Tooltip text={isOpen ? "" : "Çıkış"} position="right">
           <div className="!p-4 mt-auto truncate">
             <button
-              className={`flex items-center gap-3 ${isOpen ? "" : "justify-center"
-                } !px-3 !py-2 w-full text-sm text-red-400 cursor-pointer hover:bg-orange-50 hover:text-orange-400 !rounded-lg transition-all duration-300 ease-in-out`}
+              className={`flex items-center gap-3 ${
+                isOpen ? "" : "justify-center"
+              } !px-3 !py-2 w-full text-sm text-red-400 cursor-pointer hover:bg-orange-50 hover:text-orange-400 !rounded-lg transition-all duration-300 ease-in-out`}
             >
               <IconLogout className="w-5 h-5 min-w-5 min-h-5" />
 
@@ -172,91 +157,8 @@ const Sidebar = ({ children }) => {
       </aside>
       {/* Main content */}
       <main className="flex-1 bg-white !py-4 !px-6 overflow-auto">
-        <nav className="flex items-center justify-between">
-          <span className="font-medium text-orange-300 text-xl">
-            {activePath === "/admin/settings" ? "Ayarlar" : activeMenu.label}
-          </span>
-          {renderButton()}
-        </nav>
         {children}
       </main>
-      <Modal
-        isOpen={addModal.isModalOpen}
-        title={"Kategori Ekle"}
-        onConfirm={() => { }}
-        onCancel={() => {
-          addModal.closeModal();
-        }}
-      >
-        <TabGroup>
-          <TabList className="flex gap-2">
-            <Tab className="bg-slate-100 text-slate-700 !px-4 !py-2 rounded-full font-medium border border-slate-200 hover:bg-slate-200 data-selected:bg-slate-700 data-selected:text-white cursor-pointer">Ana Kategori</Tab>
-            <Tab className="bg-slate-100 text-slate-700 !px-4 !py-2 rounded-full font-medium border border-slate-200 hover:bg-slate-200 data-selected:bg-slate-700 data-selected:text-white cursor-pointer">Kategori</Tab>
-            <Tab className="bg-slate-100 text-slate-700 !px-4 !py-2 rounded-full font-medium border border-slate-200 hover:bg-slate-200 data-selected:bg-slate-700 data-selected:text-white cursor-pointer">Alt Kategori</Tab>
-
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <div className="flex flex-col gap-1.5 !p-[1.5rem]">
-                <label className="text-slate-700 font-medium" for="html">Ana Kategori</label>
-                <input className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300" placeholder="örn. Erkek" type="text" id="html" name="fav_language" />
-                <div className="flex justify-end !pt-2">
-                  <button className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">Kategori Ekle</button>
-                </div>
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div className="flex flex-col gap-1.5 !p-[1.5rem]">
-                <div className="flex flex-col gap-1">
-                  <label className="text-slate-700 font-medium" for="cars">Ana Katagori</label>
-                  <select className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300" name="cars" id="cars">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-slate-700 font-medium" for="html">Kategori</label>
-                  <input className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300" placeholder="örn. Çocuk & Giyim" type="text" id="html" name="fav_language" />
-                </div>
-                <div className="flex justify-end !pt-2">
-                  <button className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">Kategori Ekle</button>
-                </div>
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div className="flex flex-col gap-1.5 !p-[1.5rem]">
-                <div className="flex flex-col gap-1">
-                  <label className="text-slate-700 font-medium" for="cars">Ana Katagori</label>
-                  <select className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300" name="cars" id="cars">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-slate-700 font-medium" for="cars">Ana Katagori</label>
-                  <select className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300" name="cars" id="cars">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-slate-700 font-medium" for="html">Kategori</label>
-                  <input className="bg-slate-50 !px-4 !py-2 rounded-lg border border-slate-100 outline-none focus:bg-slate-200 duration-300" placeholder="örn. Çocuk & Giyim" type="text" id="html" name="fav_language" />
-                </div>
-                <div className="flex justify-end !pt-2">
-                  <button className="bg-green-500 text-white font-medium !px-4 !py-1.5 rounded-xl border border-green-200 hover:bg-green-600 duration-300 cursor-pointer">Kategori Ekle</button>
-                </div>
-              </div>
-            </TabPanel>
-          </TabPanels>
-        </TabGroup>
-      </Modal>
     </div>
   );
 };
