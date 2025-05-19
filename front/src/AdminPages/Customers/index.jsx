@@ -4,7 +4,7 @@ import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../../component/Modal";
 import { useMessageBox } from "../../context/MessageBox";
-
+import LocationSelect from '../../component/LocationSelect'
 const index = () => {
   const { openMessageBox } = useMessageBox();
   const addUserModal = useModal();
@@ -12,9 +12,10 @@ const index = () => {
   const tableData = {
     columns: [
       { field: "username", headerName: "Kulanıcı adı", width: 150 },
+      { field: "surname", headerName: "SoyAdı", width: 150 },
       { field: "phone", headerName: "Telefon", width: 150 },
       { field: "email", headerName: "E-mail", width: 250 },
-      { field: "City", headerName: "Şehir", width: 200 },
+      { field: "Adress", headerName: "Şehir", width: 200 },
     ],
     rows: [
       {
@@ -109,7 +110,11 @@ const index = () => {
         onCancel={() => {
           addUserModal.closeModal();
         }}
-      ></Modal>
+      >
+      <LocationSelect />
+
+
+      </Modal>
     </>
   );
 };
