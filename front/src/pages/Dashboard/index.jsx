@@ -70,7 +70,7 @@ const Index = () => {
               <div
                 key={oIndex}
                 onClick={() => navigateDetails(oItem["Product_id"])}
-                className="bg-slate-50/25 col-span-3 p-8 rounded-xl border border-slate-100 shadow-md hover:bg-slate-100 duration-300 cursor-pointer"
+                className="relative bg-slate-50/25 col-span-3 p-8 rounded-xl border border-slate-100 shadow-md hover:bg-slate-100 duration-300 cursor-pointer"
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-center h-[10rem]">
@@ -87,13 +87,13 @@ const Index = () => {
                   <span className="font-semibold text-xl text-orange-500">
                     {oItem.trendyol_salePrice} TL
                   </span>
-                  <div className="flex justify-end">
+                  <div className="flex justify-end py-4">
                     {oItem.Stock > 10 ? (
-                      <span className="py-1.5 px-3 rounded-full border border-green-500 text-green-500">
+                      <span className="absolute bottom-[1.5rem] right-[1.5rem] py-1.5 px-3 rounded-full border border-green-500 text-green-500">
                         Stokta var
                       </span>
                     ) : (
-                      <span className="py-1.5 px-3 rounded-full border border-rose-500 text-rose-500">
+                      <span className="absolute bottom-[1.5rem] right-[1.5rem] py-1.5 px-3 rounded-full border border-rose-500 text-rose-500">
                         Ürün Tükeniyor
                       </span>
                     )}

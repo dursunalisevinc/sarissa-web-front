@@ -247,7 +247,7 @@ const Index = () => {
         <div className='flex items-center'>
             <div className='w-full flex flex-col gap-2'>
                 <div className='!p-4 w-full flex justify-between max-w-[1280px] !mx-auto'>
-                    <Link to="/" className='flex items-center text-3xl font-medium'>Sarissa</Link>
+                    <Link to="/" className='flex items-center text-3xl font-medium'>Sarissa Bisiklet</Link>
                     <div className='flex gap-1'>
                         <div>
                             <button
