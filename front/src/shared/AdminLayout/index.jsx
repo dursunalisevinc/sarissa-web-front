@@ -1,26 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import React, { useState } from "react";
 import {
   IconBinaryTree,
-  IconBrandProducthunt,
   IconFeather,
   IconLayoutDashboard,
   IconLogout,
   IconManualGearboxFilled,
   IconMenu2,
-  IconPlus,
   IconSettings2,
   IconUsers,
   IconX,
   IconZoomInArea,
 } from "@tabler/icons-react";
-import Tooltip from "../../component/Tooltip";
 import { useLocation, useNavigate } from "react-router-dom";
-import Products from "../../AdminPages/Products";
-import { useModal } from "../../hooks/useModal";
-import Modal from "../../component/Modal";
+
 const Sidebar = ({ children }) => {
-  const addModal = useModal();
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
@@ -28,22 +21,16 @@ const Sidebar = ({ children }) => {
   const activePath = location.pathname;
   const menuItems = [
     {
-      id: "a",
+      id: "0",
       pathname: "/admin",
       label: "Ana Sayfa",
       icon: <IconLayoutDashboard className="w-5 h-5 min-w-5 min-h-5s" />,
     },
     {
-      id: "0",
+      id: "1",
       pathname: "/admin/customers",
       label: "Müşteriler",
       icon: <IconUsers className="w-5 h-5 min-w-5 min-h-5s" />,
-    },
-    {
-      id: "1",
-      pathname: "/admin/variant",
-      label: "Varyantlar(Özellikler)",
-      icon: <IconFeather className="w-5 h-5 min-w-5 min-h-5s" />,
     },
     {
       id: "2",
@@ -97,7 +84,6 @@ const Sidebar = ({ children }) => {
         {/* Menu */}
         <nav className="flex-1 !px-2 !py-4 space-y-2">
           {menuItems.map((item) => (
-            <Tooltip text={isOpen ? "" : item.label} position="right">
               <div key={item.id} className=" !mt-auto !px-2 truncate ">
                 <button
                   onClick={() => {
@@ -118,13 +104,11 @@ const Sidebar = ({ children }) => {
                   </span>
                 </button>
               </div>
-            </Tooltip>
           ))}
         </nav>
         <div className="border-b border-slate-200 !mx-5"></div>
 
         {/* Logout */}
-        <Tooltip text={isOpen ? "" : "Ayarlar"} position="right">
           <div className="!pt-4 !px-4 border-slate-200 mt-auto truncate">
             <button
               onClick={() => {
@@ -143,9 +127,7 @@ const Sidebar = ({ children }) => {
               <span className={`${isOpen ? "block" : "hidden"}`}>Ayarlar</span>
             </button>
           </div>
-        </Tooltip>
 
-        <Tooltip text={isOpen ? "" : "Çıkış"} position="right">
           <div className="!p-4 mt-auto truncate">
             <button
               className={`flex items-center gap-3 ${
@@ -159,7 +141,6 @@ const Sidebar = ({ children }) => {
               </span>
             </button>
           </div>
-        </Tooltip>
       </aside>
       {/* Main content */}
       <main className="flex-1 bg-white !py-4 !px-6 overflow-auto">

@@ -14,16 +14,12 @@ import Customers from "./AdminPages/Customers";
 import Variants from "./AdminPages/Variants";
 import Categories from "./AdminPages/Categories";
 import { MessageBoxProvider } from "./context/MessageBox";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { getXmlProductById } from "./Api/productService";
-import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-quill/dist/quill.snow.css";
 import { CardProvider } from "./context/CartContext";
 
-
-
 function App() {
-
   //   useEffect(()=>{
   // getXmlProductById(1554)
   //   .then(res => console.log(res.data))
@@ -31,7 +27,7 @@ function App() {
   //   },[])
 
   return (
-    <div>
+    <>
       <ToastContainer />
       <CardProvider>
         <MessageBoxProvider>
@@ -66,14 +62,6 @@ function App() {
                 }
               />
               <Route
-                path="/admin/variant"
-                element={
-                  <AdminLayout>
-                    <Variants />
-                  </AdminLayout>
-                }
-              />
-              <Route
                 path="/admin/categories"
                 element={
                   <AdminLayout>
@@ -102,8 +90,7 @@ function App() {
           </BrowserRouter>
         </MessageBoxProvider>
       </CardProvider>
-    </div>
-
+    </>
   );
 }
 
