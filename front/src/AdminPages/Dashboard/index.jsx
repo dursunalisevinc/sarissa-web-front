@@ -1,3 +1,4 @@
+import { IconShoppingBag } from "@tabler/icons-react";
 import axios from "axios";
 import React, { useEffect } from "react";
 
@@ -31,9 +32,28 @@ const Index = () => {
   return (
     <>
       <nav className="flex items-center justify-between px-4 py-3 bg-white shadow-sm rounded-md mb-4 h-[62px]">
-        <span className="font-semibold text-xl text-orange-500">Ana Sayfa</span>
+        <span className="flex items-center font-semibold text-xl text-slate-800 gap-1"><span><IconShoppingBag className="text-orange-500" /></span> Siparişler </span>
       </nav>
-      Admin sayfası burasıdır
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-span-4">
+          <div className="flex flex-col p-4 rounded-xl h-[20rem] border border-slate-100 shadow-sm bg-slate-50">
+            <div className="flex justify-between items-center pt-2 pb-4">
+              <div className="bg-yellow-100 text-yellow-500 px-4 py-1.5 rounded-full border border-yellow-500">Bekliyor</div>
+              <div className="text-slate-700 font-semibold">03/04/2025</div>
+            </div>
+            <div className="grow overflow-auto">
+              <div className="">
+                dkmkd
+              </div>
+            </div>
+            <div className="flex justify-end">
+              total
+            </div>
+          </div>
+        </div>
+        <div className="col-span-4">dfdf</div>
+        <div className="col-span-4">dfdf</div>
+      </div>
     </>
   );
 };

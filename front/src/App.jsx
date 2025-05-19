@@ -16,7 +16,6 @@ import Categories from "./AdminPages/Categories";
 import { MessageBoxProvider } from "./context/MessageBox";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "react-quill/dist/quill.snow.css";
 import { CardProvider } from "./context/CartContext";
 
 function App() {

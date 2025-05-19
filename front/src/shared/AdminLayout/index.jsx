@@ -23,7 +23,7 @@ const Sidebar = ({ children }) => {
     {
       id: "0",
       pathname: "/admin",
-      label: "Ana Sayfa",
+      label: "Siparişler",
       icon: <IconLayoutDashboard className="w-5 h-5 min-w-5 min-h-5s" />,
     },
     {
