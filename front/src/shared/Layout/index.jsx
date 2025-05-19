@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const Index = () => {
     const [showFixedNavbar, setShowFixedNavbar] = useState(false);
-
+    // console.log(JSON.parse(localStorage.getItem('cardItem')));
     const handleScroll = () => {
         if (window.scrollY > 400) {
             setShowFixedNavbar(true);

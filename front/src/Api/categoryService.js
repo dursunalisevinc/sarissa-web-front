@@ -83,4 +83,15 @@ const getCategoriesByMainId = (mainCategoryId) => {
     );
 };
 
-export { createMainCategory, getMainCategories, getCategoriesByMainId, addCategory, addSubCategory, getSubCategories };
+const getCategoryTree = () => {
+    const token = localStorage.getItem("token");
+
+    return axios.get("http://localhost:5000/api/categories/tree", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+
+export { createMainCategory, getMainCategories, getCategoriesByMainId, addCategory, addSubCategory, getSubCategories, getCategoryTree };

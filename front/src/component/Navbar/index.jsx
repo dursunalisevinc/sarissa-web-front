@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { IconMenu, IconMenu2, IconMenu3, IconShoppingBag, IconUser } from '@tabler/icons-react';
+import { IconMenu, IconMenu2, IconMenu3, IconMinus, IconPlus, IconShoppingBag, IconTrash, IconUser } from '@tabler/icons-react';
+import { useCardData } from '../../context/CartContext';
+
+
 const data = [
     {
         "id": 1,
@@ -161,8 +164,25 @@ const data = [
 ];
 const Index = () => {
     const navigate = useNavigate();
+    const { cardItems, setCardItems } = useCardData();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorElShopp, setAnchorElShopp] = React.useState(null);
+    // const [cartData, setCartData] = useState([]);
+
     const [showDropdown, setShowDropdown] = useState(false);
+
+    const handleClickShopp = (event) => {
+        setAnchorElShopp(event.currentTarget);
+    };
+    const openShopp = Boolean(anchorElShopp);
+    const idShopp = openShopp ? 'simple-popover' : undefined;
+
+    const handleCloseShopp = () => {
+        setAnchorElShopp(null);
+    };
+
+    console.log({ cardItems });
+
 
     const handleMouseEnter = () => {
         setShowDropdown(true);
@@ -183,13 +203,51 @@ const Index = () => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
+    useEffect(() => {
+        const stored = localStorage?.getItem("cardItem");
+        if (stored) {
+            try {
+                setCardItems(JSON.parse(stored));
+            } catch (err) {
+                console.error("JSON parse hatası:", err);
+            }
+        }
+    }, []);
+
+
+
+    const deleteCartItem = (id) => {
+        const updatedItems = cardItems?.filter(item => item.cardId !== id);
+        localStorage?.setItem('cardItem', updatedItems);
+        setCardItems(updatedItems);
+    };
+
+    const editCardItem = (id, isIncrease) => {
+        const updatedCart = cardItems.map(item => {
+            if (item.cardId === id) {
+                let newQuantity = isIncrease ? item.quantity + 1 : item.quantity - 1;
+                newQuantity = Math.max(newQuantity, 1);
+                return { ...item, quantity: newQuantity };
+            }
+            return item;
+        });
+
+        setCardItems(updatedCart);
+        localStorage.setItem('cardItem', JSON.stringify(updatedCart));
+    };
+
+    const resetCardItems = () => {
+        setCardItems([]);
+        localStorage.setItem('cardItem', []);
+    };
+
+
+
     return (
         <div className='flex items-center'>
             <div className='w-full flex flex-col gap-2'>
                 <div className='!p-4 w-full flex justify-between max-w-[1280px] !mx-auto'>
-                    <div className='flex items-center text-3xl font-medium'>
-                        Sarissa
-                    </div>
+                    <Link to="/" className='flex items-center text-3xl font-medium'>Sarissa</Link>
                     <div className='flex gap-1'>
                         <div>
                             <button
@@ -225,10 +283,73 @@ const Index = () => {
                         </div>
                         <div>
                             <button
+                                aria-describedby={idShopp} variant="contained" onClick={handleClickShopp}
                                 className='flex items-center !px-4 !py-2 rounded-xl cursor-pointer gap-1 outline-none group'
                             >
-                                <IconShoppingBag className='h-5 group-hover:text-orange-500 duration-300' /> <span className='text-md group-hover:text-orange-500 duration-300'>Sepetim</span>
+                                <IconShoppingBag className='h-5 group-hover:text-orange-500 duration-300' /> <span className='text-md group-hover:text-orange-500 duration-300'>Sepetim <span className='text-rose-500'>({cardItems.length})</span></span>
                             </button>
+                            <Popover
+                                id={idShopp}
+                                open={openShopp}
+                                anchorEl={anchorElShopp}
+                                onClose={handleCloseShopp}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                }}
+                                PaperProps={{
+                                    sx: {
+                                        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.08)', // hafif gölge
+                                        border: '1px solid #e0e0e0',                  // açık gri border
+                                        borderRadius: 2,                              // köşeleri biraz yumuşat
+                                    },
+                                }}
+                            >
+                                <div className='w-[30rem]'>
+                                    {
+                                        cardItems && cardItems.length > 0 ?
+                                            <div className='relative flex flex-col gap-4 max-h-[30rem] overflow-auto'>
+                                                <div className='sticky top-0 font-medium text-xl bg-white p-[1rem] border-b border-slate-200'> Sepetim <span className='text-rose-400'>({cardItems.length})</span></div>
+                                                {
+                                                    cardItems && cardItems.length > 0 &&
+                                                    cardItems.map((oItem, oIndex) => {
+                                                        return (
+                                                            <div key={oIndex} className='flex justify-between gap-4 bg-slate-50 border border-slate-100 shadow-sm rounded-xl p-4 mx-[1rem]'>
+                                                                <div className='flex gap-2'>
+                                                                    <img src={oItem.Image1} className='h-[5rem]' alt="" />
+                                                                    <div className='text-sm font-medium uppercase'>{oItem.Brand} <span className='font-normal normal-case'>{oItem.Name}</span> </div>
+                                                                </div>
+                                                                <div className='flex flex-col gap-2'>
+                                                                    <button onClick={() => deleteCartItem(oItem.cardId)} className='flex justify-end'><IconTrash className='h-[1.2rem] text-rose-600 hover:bg-rose-200 rounded-full duration-300 cursor-pointer' /></button>
+                                                                    <div className='font-medium text-orange-500 text-end'> {parseInt(oItem.trendyol_salePrice) * oItem.quantity} TL </div>
+                                                                    <div className='flex justify-between items-center bg-white w-[6rem] px-2 py-1 rounded-full'>
+                                                                        <button onClick={() => editCardItem(oItem.cardId, false)} className='flex justify-center items-center rounded-full bg-slate-50 border border-slate-200 w-[1.2rem] h-[1.2rem] hover:bg-rose-100 duration-300 cursor-pointer'> <IconMinus className='text-slate-600 h-[1.2rem]' /> </button>
+                                                                        <input type="text" className='w-[1.5rem] outline-none font-semibold text-center py-1' value={cardItems[oIndex].quantity} />
+                                                                        <button onClick={() => editCardItem(oItem.cardId, true)} className='flex justify-center items-center rounded-full bg-slate-50 border border-slate-200 w-[1.2rem] h-[1.2rem] hover:bg-green-100 duration-300 cursor-pointer'> <IconPlus className='text-slate-600 h-[1.2rem]' /> </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })
+
+                                                }
+                                                <div className='sticky bottom-0 flex justify-end p-[1rem] bg-white'>
+                                                    <button onClick={() => resetCardItems()} className='bg-white text-rose-500 text-rose-500 px-4 py-2 rounded-full border border-rose-500 hover:bg-rose-50 duration-300 cursor-pointer mx-2'>Sepeti Kaldır</button>
+                                                    <button className='bg-green-500 text-white text-green-500 px-4 py-2 rounded-full hover:bg-green-600 duration-300 cursor-pointer'>Sepeti Onayla</button>
+                                                </div>
+                                            </div>
+                                            :
+                                            <div className='flex flex-col justify-between gap-4 bg-slate-50 border border-slate-100 shadow-sm rounded-xl p-4'>
+                                                <div className='text-xl font-medium text-center text-slate-800'>Sepetinizde Ürün Bulunmamaktadır</div>
+                                                <button className='bg-orange-500 text-white px-4 py-2 rounded-full cursor-pointer hover:bg-orange-600 duration-300'>Alışverişe Git</button>
+                                            </div>
+                                    }
+                                </div>
+                            </Popover>
                         </div>
                     </div>
                 </div>
@@ -245,16 +366,21 @@ const Index = () => {
                             <span className="uppercase">Tüm Kategoriler</span>
                         </div>
                         {/* Diğer sabit kategoriler */}
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Kadın</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Erkek</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Kozmetik</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Bisiklet</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Motor</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Aksesuar</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Elektronik</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Spor</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Hobi</div>
-                        <div className="col-span-1 hover:text-orange-500 duration-300">Oyuncak</div>
+                        {
+                            data && data.length > 0 &&
+                            data.map((oItem, oIndex) => {
+                                if (oIndex < 5) {
+                                    return (
+                                        <div key={oIndex} className="col-span-2 hover:text-orange-500 duration-300 truncate">
+                                            {oItem.name}
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })
+                        }
+
+
                     </div>
                     {/* Dropdown ekran genişliği kadar ve mouseLeave ile kapanıyor */}
                     {showDropdown && (
@@ -263,31 +389,42 @@ const Index = () => {
                             onMouseLeave={handleMouseLeave}
                         >
                             <div className="max-w-[1280px] mx-auto grid grid-cols-12 gap-4 p-6">
-                                <div className='col-span-2 bg-red-400'>
-                                    <div className='flex flex-col'>
-                                        {
-                                            data.map((oItem, oIndex) => {
-                                                return (
-                                                    <div key={oIndex} className={`${oIndex % 2 == 0 ? "bg-orange-50 hover:bg-orange-300" : "bg-orange-100 hover:bg-orange-400"} border-b border-orange-200 p-2 duration-300`}>
-                                                        {oItem.name}
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                                <div className='col-span-8'>
-                                    <div>Kadın Giyim</div>
-                                    <div>Erkek Giyim</div>
-                                    <div>Kozmetik</div>
-                                    <div>Bisiklet</div>
-                                    <div>Motor</div>
-                                    <div>Aksesuar</div>
-                                    <div>Elektronik</div>
-                                    <div>Spor</div>
-                                    <div>Hobi</div>
-                                    <div>Oyuncak</div>
-                                </div>
+
+                                {
+                                    data.map((oItem, oIndex) => {
+                                        return (
+                                            <div key={oIndex} className={`${oIndex % 2 == 0 ? "bg-slate-50" : "bg-slate-100"} col-span-2 border border-slate-200 rounded-xl p-2 duration-300 `}>
+
+                                                <div>
+                                                    <span className='underline text-blue-500 hover:text-blue-700 duration-300'>{oItem.name}</span>
+
+                                                    {
+                                                        oItem.categories.map((item, index) => {
+                                                            return (
+                                                                <div key={index} className='ps-3'>
+                                                                    <span className='underline text-blue-500 hover:text-blue-700 duration-300'> {item.name}</span>
+
+                                                                    {
+                                                                        item.categories.map((subItem, subIndex) => {
+                                                                            return (
+                                                                                <div key={subIndex} className='ps-3'>
+                                                                                    <span className='underline text-blue-500 hover:text-blue-700 duration-300'>{subItem.name}</span>
+
+                                                                                </div>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
+
+
                             </div>
                         </div>
                     )}

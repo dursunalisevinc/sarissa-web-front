@@ -16,78 +16,92 @@ import Categories from "./AdminPages/Categories";
 import { MessageBoxProvider } from "./context/MessageBox";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getXmlProductById } from "./Api/productService";
+import { useEffect } from "react";
+import { CardProvider } from "./context/CartContext";
+
+
 
 function App() {
+
+  //   useEffect(()=>{
+  // getXmlProductById(1554)
+  //   .then(res => console.log(res.data))
+  //   .catch(err => console.error(err));
+  //   },[])
+
   return (
     <div>
       <ToastContainer />
-      <MessageBoxProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
+      <CardProvider>
+        <MessageBoxProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
 
-            {/* <Route element={<PrivateRoute allowedRoles={["user"]} />}> */}
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="product/:id" element={<ProductDetail />} />
-            </Route>
-            {/* </Route> */}
+              {/* <Route element={<PrivateRoute allowedRoles={["user"]} />}> */}
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="product/:id" element={<ProductDetail />} />
+              </Route>
+              {/* </Route> */}
 
-            {/* <Route element={<PrivateRoute allowedRoles={["admin"]} />}> */}
-            <Route
-              path="/admin/"
-              element={
-                <AdminLayout>
-                  <AdminDashboard />
-                </AdminLayout>
-              }
-            />
-            <Route
-              path="/admin/customers"
-              element={
-                <AdminLayout>
-                  <Customers />
-                </AdminLayout>
-              }
-            />
-            <Route
-              path="/admin/variant"
-              element={
-                <AdminLayout>
-                  <Variants />
-                </AdminLayout>
-              }
-            />
-            <Route
-              path="/admin/categories"
-              element={
-                <AdminLayout>
-                  <Categories />
-                </AdminLayout>
-              }
-            />
-            <Route
-              path="/admin/products"
-              element={
-                <AdminLayout>
-                  <Products />
-                </AdminLayout>
-              }
-            />
-            <Route
-              path="/admin/settings"
-              element={
-                <AdminLayout>
-                  <Products />
-                </AdminLayout>
-              }
-            />
-            {/* </Route> */}
-          </Routes>
-        </BrowserRouter>
-      </MessageBoxProvider>
+              {/* <Route element={<PrivateRoute allowedRoles={["admin"]} />}> */}
+              <Route
+                path="/admin/"
+                element={
+                  <AdminLayout>
+                    <AdminDashboard />
+                  </AdminLayout>
+                }
+              />
+              <Route
+                path="/admin/customers"
+                element={
+                  <AdminLayout>
+                    <Customers />
+                  </AdminLayout>
+                }
+              />
+              <Route
+                path="/admin/variant"
+                element={
+                  <AdminLayout>
+                    <Variants />
+                  </AdminLayout>
+                }
+              />
+              <Route
+                path="/admin/categories"
+                element={
+                  <AdminLayout>
+                    <Categories />
+                  </AdminLayout>
+                }
+              />
+              <Route
+                path="/admin/products"
+                element={
+                  <AdminLayout>
+                    <Products />
+                  </AdminLayout>
+                }
+              />
+              <Route
+                path="/admin/settings"
+                element={
+                  <AdminLayout>
+                    <Products />
+                  </AdminLayout>
+                }
+              />
+              {/* </Route> */}
+            </Routes>
+          </BrowserRouter>
+        </MessageBoxProvider>
+      </CardProvider>
     </div>
 
   );
