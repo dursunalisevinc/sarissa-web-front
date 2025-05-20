@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
+import CategoryMenu from "../../component/CategoryMenu";
+
 import {
   IconMenu,
   IconMenu2,
@@ -14,160 +16,252 @@ import {
 } from "@tabler/icons-react";
 import { useCardData } from "../../context/CartContext";
 
-const data = [
+export const data = [
   {
     id: 1,
-    name: "Yeni Ana Kategori",
-    createdAt: "2025-05-11T17:58:09.487Z",
-    updatedAt: "2025-05-11T17:58:09.487Z",
+    name: "Elektronik",
+    createdAt: "2024-12-15T09:00:00Z",
+    updatedAt: "2025-04-10T15:30:00Z",
     categories: [
       {
-        id: 1,
-        name: "yeni alttt",
+        id: 101,
+        name: "Bilgisayarlar",
         main_category_id: 1,
         parent_category_id: null,
-        createdAt: "2025-05-11T18:17:10.155Z",
-        updatedAt: "2025-05-11T18:17:10.155Z",
-        categories: [],
+        createdAt: "2024-12-16T10:00:00Z",
+        updatedAt: "2025-04-10T15:30:00Z",
+        categories: [
+          {
+            id: 1011,
+            name: "Dizüstü Bilgisayarlar",
+            main_category_id: 1,
+            parent_category_id: 101,
+            createdAt: "2024-12-17T11:00:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+          {
+            id: 1012,
+            name: "Masaüstü Bilgisayarlar",
+            main_category_id: 1,
+            parent_category_id: 101,
+            createdAt: "2024-12-17T11:30:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+          {
+            id: 1013,
+            name: "Bilgisayar Aksesuarları",
+            main_category_id: 1,
+            parent_category_id: 101,
+            createdAt: "2024-12-17T12:00:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+        ],
+      },
+      {
+        id: 102,
+        name: "Telefonlar",
+        main_category_id: 1,
+        parent_category_id: null,
+        createdAt: "2024-12-16T13:00:00Z",
+        updatedAt: "2025-04-10T15:30:00Z",
+        categories: [
+          {
+            id: 1021,
+            name: "Akıllı Telefonlar",
+            main_category_id: 1,
+            parent_category_id: 102,
+            createdAt: "2024-12-17T13:00:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+          {
+            id: 1022,
+            name: "Telefon Aksesuarları",
+            main_category_id: 1,
+            parent_category_id: 102,
+            createdAt: "2024-12-17T13:30:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+          {
+            id: 1023,
+            name: "Telefon Parçaları",
+            main_category_id: 1,
+            parent_category_id: 102,
+            createdAt: "2024-12-17T14:00:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+        ],
+      },
+      {
+        id: 103,
+        name: "TV & Ses Sistemleri",
+        main_category_id: 1,
+        parent_category_id: null,
+        createdAt: "2024-12-16T15:00:00Z",
+        updatedAt: "2025-04-10T15:30:00Z",
+        categories: [
+          {
+            id: 1031,
+            name: "Televizyonlar",
+            main_category_id: 1,
+            parent_category_id: 103,
+            createdAt: "2024-12-17T15:00:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+          {
+            id: 1032,
+            name: "Ev Sinema Sistemleri",
+            main_category_id: 1,
+            parent_category_id: 103,
+            createdAt: "2024-12-17T15:30:00Z",
+            updatedAt: "2025-04-10T15:30:00Z",
+          },
+        ],
       },
     ],
   },
   {
     id: 2,
-    name: "Yeni Ana Kategori",
-    createdAt: "2025-05-11T18:03:03.224Z",
-    updatedAt: "2025-05-11T18:03:03.224Z",
-    categories: [],
+    name: "Moda",
+    createdAt: "2025-01-05T08:00:00Z",
+    updatedAt: "2025-04-01T10:15:00Z",
+    categories: [
+      {
+        id: 201,
+        name: "Erkek Giyim",
+        main_category_id: 2,
+        parent_category_id: null,
+        createdAt: "2025-01-06T09:00:00Z",
+        updatedAt: "2025-04-01T10:15:00Z",
+        categories: [
+          {
+            id: 2011,
+            name: "Tişörtler",
+            main_category_id: 2,
+            parent_category_id: 201,
+            createdAt: "2025-01-07T09:30:00Z",
+            updatedAt: "2025-04-01T10:15:00Z",
+          },
+          {
+            id: 2012,
+            name: "Pantolonlar",
+            main_category_id: 2,
+            parent_category_id: 201,
+            createdAt: "2025-01-07T10:00:00Z",
+            updatedAt: "2025-04-01T10:15:00Z",
+          },
+          {
+            id: 2013,
+            name: "Montlar",
+            main_category_id: 2,
+            parent_category_id: 201,
+            createdAt: "2025-01-07T10:30:00Z",
+            updatedAt: "2025-04-01T10:15:00Z",
+          },
+        ],
+      },
+      {
+        id: 202,
+        name: "Kadın Giyim",
+        main_category_id: 2,
+        parent_category_id: null,
+        createdAt: "2025-01-06T11:00:00Z",
+        updatedAt: "2025-04-01T10:15:00Z",
+        categories: [
+          {
+            id: 2021,
+            name: "Elbiseler",
+            main_category_id: 2,
+            parent_category_id: 202,
+            createdAt: "2025-01-07T11:30:00Z",
+            updatedAt: "2025-04-01T10:15:00Z",
+          },
+          {
+            id: 2022,
+            name: "Ayakkabılar",
+            main_category_id: 2,
+            parent_category_id: 202,
+            createdAt: "2025-01-07T12:00:00Z",
+            updatedAt: "2025-04-01T10:15:00Z",
+          },
+          {
+            id: 2023,
+            name: "Çantalar",
+            main_category_id: 2,
+            parent_category_id: 202,
+            createdAt: "2025-01-07T12:30:00Z",
+            updatedAt: "2025-04-01T10:15:00Z",
+          },
+        ],
+      },
+    ],
   },
   {
     id: 3,
-    name: "Bu ikinci katagory",
-    createdAt: "2025-05-11T18:17:54.009Z",
-    updatedAt: "2025-05-11T18:17:54.009Z",
+    name: "Ev & Yaşam",
+    createdAt: "2025-01-10T07:30:00Z",
+    updatedAt: "2025-04-12T14:45:00Z",
     categories: [
       {
-        id: 2,
-        name: "yeni 6655656",
+        id: 301,
+        name: "Mobilya",
         main_category_id: 3,
         parent_category_id: null,
-        createdAt: "2025-05-11T18:18:11.927Z",
-        updatedAt: "2025-05-11T18:18:11.927Z",
+        createdAt: "2025-01-11T08:00:00Z",
+        updatedAt: "2025-04-12T14:45:00Z",
         categories: [
           {
-            id: 3,
-            name: "Kurutulmuş Meyveler",
+            id: 3011,
+            name: "Yatak Odası",
             main_category_id: 3,
-            parent_category_id: 2,
-            createdAt: "2025-05-11T18:27:41.994Z",
-            updatedAt: "2025-05-11T18:27:41.994Z",
+            parent_category_id: 301,
+            createdAt: "2025-01-12T08:30:00Z",
+            updatedAt: "2025-04-12T14:45:00Z",
+          },
+          {
+            id: 3012,
+            name: "Oturma Odası",
+            main_category_id: 3,
+            parent_category_id: 301,
+            createdAt: "2025-01-12T09:00:00Z",
+            updatedAt: "2025-04-12T14:45:00Z",
+          },
+          {
+            id: 3013,
+            name: "Ofis Mobilyaları",
+            main_category_id: 3,
+            parent_category_id: 301,
+            createdAt: "2025-01-12T09:30:00Z",
+            updatedAt: "2025-04-12T14:45:00Z",
           },
         ],
       },
-    ],
-  },
-  {
-    id: 4,
-    name: "Dursun",
-    createdAt: "2025-05-14T12:11:00.205Z",
-    updatedAt: "2025-05-14T12:11:00.205Z",
-    categories: [],
-  },
-  {
-    id: 5,
-    name: "Dursun",
-    createdAt: "2025-05-14T12:11:20.167Z",
-    updatedAt: "2025-05-14T12:11:20.167Z",
-    categories: [],
-  },
-  {
-    id: 6,
-    name: "Erkek",
-    createdAt: "2025-05-14T12:22:21.025Z",
-    updatedAt: "2025-05-14T12:22:21.025Z",
-    categories: [
       {
-        id: 4,
-        name: "Erkek Giyim",
-        main_category_id: 6,
+        id: 302,
+        name: "Mutfak",
+        main_category_id: 3,
         parent_category_id: null,
-        createdAt: "2025-05-14T14:03:05.534Z",
-        updatedAt: "2025-05-14T14:03:05.534Z",
-        categories: [],
-      },
-    ],
-  },
-  {
-    id: 7,
-    name: "benim ana katagorim",
-    createdAt: "2025-05-14T12:23:05.265Z",
-    updatedAt: "2025-05-14T12:23:05.265Z",
-    categories: [],
-  },
-  {
-    id: 8,
-    name: "bu katagori eklendi",
-    createdAt: "2025-05-14T12:27:29.520Z",
-    updatedAt: "2025-05-14T12:27:29.520Z",
-    categories: [],
-  },
-  {
-    id: 9,
-    name: "Bayan Giyim",
-    createdAt: "2025-05-14T14:20:43.267Z",
-    updatedAt: "2025-05-14T14:20:43.267Z",
-    categories: [
-      {
-        id: 5,
-        name: "Topuklular",
-        main_category_id: 9,
-        parent_category_id: null,
-        createdAt: "2025-05-14T14:21:20.956Z",
-        updatedAt: "2025-05-14T14:21:20.956Z",
-        categories: [],
-      },
-    ],
-  },
-  {
-    id: 10,
-    name: "new cat",
-    createdAt: "2025-05-14T15:34:38.737Z",
-    updatedAt: "2025-05-14T15:34:38.737Z",
-    categories: [
-      {
-        id: 6,
-        name: "new-1",
-        main_category_id: 10,
-        parent_category_id: null,
-        createdAt: "2025-05-14T15:39:39.746Z",
-        updatedAt: "2025-05-14T15:39:39.746Z",
-        categories: [],
-      },
-      {
-        id: 7,
-        name: "new-2",
-        main_category_id: 10,
-        parent_category_id: null,
-        createdAt: "2025-05-14T15:39:43.589Z",
-        updatedAt: "2025-05-14T15:39:43.589Z",
+        createdAt: "2025-01-11T10:00:00Z",
+        updatedAt: "2025-04-12T14:45:00Z",
         categories: [
           {
-            id: 8,
-            name: "bu alan 2.kategori",
-            main_category_id: 10,
-            parent_category_id: 7,
-            createdAt: "2025-05-14T15:40:01.897Z",
-            updatedAt: "2025-05-14T15:40:01.897Z",
+            id: 3021,
+            name: "Tencere & Tavalar",
+            main_category_id: 3,
+            parent_category_id: 302,
+            createdAt: "2025-01-12T10:30:00Z",
+            updatedAt: "2025-04-12T14:45:00Z",
+          },
+          {
+            id: 3022,
+            name: "Mutfak Gereçleri",
+            main_category_id: 3,
+            parent_category_id: 302,
+            createdAt: "2025-01-12T11:00:00Z",
+            updatedAt: "2025-04-12T14:45:00Z",
           },
         ],
       },
     ],
-  },
-  {
-    id: 11,
-    name: "new cat",
-    createdAt: "2025-05-14T15:35:23.954Z",
-    updatedAt: "2025-05-14T15:35:23.954Z",
-    categories: [],
   },
 ];
 
@@ -464,45 +558,7 @@ const Index = () => {
               className="absolute top-[2.6rem] right-0 left-0  bg-white shadow-md z-50 rounded-b-xl"
               onMouseLeave={handleMouseLeave}
             >
-              <div className="max-w-[1280px] mx-auto grid grid-cols-12 gap-4 p-6">
-                {data.map((oItem, oIndex) => {
-                  return (
-                    <div
-                      key={oIndex}
-                      className={`${
-                        oIndex % 2 == 0 ? "bg-slate-50" : "bg-slate-100"
-                      } col-span-3 border border-slate-200 rounded-xl p-2 duration-300 `}
-                    >
-                      <div>
-                        <span className="underline text-blue-500 hover:text-blue-700 duration-300">
-                          {oItem.name}
-                        </span>
-
-                        {oItem.categories.map((item, index) => {
-                          return (
-                            <div key={index} className="ps-3">
-                              <span className="underline text-blue-500 hover:text-blue-700 duration-300">
-                                {" "}
-                                {item.name}
-                              </span>
-
-                              {item.categories.map((subItem, subIndex) => {
-                                return (
-                                  <div key={subIndex} className="ps-3">
-                                    <span className="underline text-blue-500 hover:text-blue-700 duration-300">
-                                      {subItem.name}
-                                    </span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <CategoryMenu data={data} />
             </div>
           )}
         </div>
