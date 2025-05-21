@@ -1,8 +1,25 @@
-import { IconCircleFilled } from "@tabler/icons-react";
+import {
+  IconChevronCompactRight,
+  IconChevronRight,
+} from "@tabler/icons-react";
 import { useState } from "react";
 
 const Index = ({ data }) => {
   const [activeCategory, setActiveCategory] = useState(null);
+
+  const maxItemsPerColumn = 6; // 1 sütunda max 5 kategori göster
+
+  // Aktif kategorinin alt kategorilerini maxItemsPerColumn parçalarına böl
+  const chunks = [];
+  if (activeCategory?.categories?.length) {
+    for (
+      let i = 0;
+      i < activeCategory.categories.length;
+      i += maxItemsPerColumn
+    ) {
+      chunks.push(activeCategory.categories.slice(i, i + maxItemsPerColumn));
+    }
+  }
 
   return (
     <div className="flex flex-col md:flex-row w-full h-auto md:h-[28rem] rounded-lg overflow-hidden border border-slate-200 shadow-lg shadow-slate-100 bg-white">
@@ -12,10 +29,10 @@ const Index = ({ data }) => {
           <div
             key={mainCat.id}
             onMouseEnter={() => setActiveCategory(mainCat)}
-            className={`px-6 py-4 cursor-pointer select-none transition-all duration-300 rounded-r-xl
+            className={`px-4 py-3 cursor-pointer select-none transition-all duration-300
               ${
                 activeCategory?.id === mainCat.id
-                  ? "bg-white font-bold text-blue-700 shadow-inner border-l-4 border-blue-600"
+                  ? "bg-white font-bold text-orange-400 hover:shadow-sm border-l-4 border-orange-400"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
           >
@@ -25,70 +42,46 @@ const Index = ({ data }) => {
       </nav>
 
       {/* Sağ Alt Kategoriler */}
-      <section className="w-full md:w-4/5 p-6 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100 bg-gray-50">
-        {activeCategory?.categories?.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {activeCategory.categories.map((subCat) => (
-              <div
-                key={subCat.id}
-                className="relative rounded-2xl px-6 py-5 cursor-pointer group transition-shadow duration-300 hover:shadow-lg bg-white border border-transparent hover:border-blue-300"
-                onClick={() => alert(`Kategori seçildi: ${subCat.name}`)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    alert(`Kategori seçildi: ${subCat.name}`);
-                  }
-                }}
-              >
-                <h4 className="flex items-center justify-between text-blue-800 font-semibold mb-4 border-b border-blue-300 pb-3 tracking-wide text-lg">
-                  {subCat.name}
-                  <IconCircleFilled
-                    size={"1.1rem"}
-                    className="opacity-0 group-hover:opacity-100 text-blue-500 transition-opacity"
-                  />
-                </h4>
-
-                {subCat.categories?.length > 0 ? (
-                  <ul className="ml-5 list-disc text-blue-700 text-sm space-y-2">
-                    {subCat.categories.map((subSubCat) => (
-                      <li
-                        key={subSubCat.id}
-                        className="hover:text-blue-900 cursor-pointer transition-colors flex items-center gap-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          alert(`Alt kategori seçildi: ${subSubCat.name}`);
-                        }}
-                        tabIndex={0}
-                        role="button"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.stopPropagation();
-                            alert(`Alt kategori seçildi: ${subSubCat.name}`);
-                          }
-                        }}
-                      >
-                        <IconCircleFilled
-                          size={"0.8rem"}
-                          className="text-blue-400"
-                        />
-                        {subSubCat.name}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="italic text-blue-400 text-sm mt-2 select-none">
-                    Alt kategori yok
-                  </p>
-                )}
+      <section className="w-full md:w-4/5 p-3 md:p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100">
+        <ul className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 text-sm p-4">
+          {activeCategory?.categories?.map((subCat) => (
+            <li key={subCat.id} className="break-inside-avoid mb-4">
+              {/* Turuncu başlık */}
+              <div className="text-orange-500 hover:text-orange-700 hover:underline font-bold mb-2">
+                {subCat.name}
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-400 italic text-center mt-16 select-none">
-            Bir ana kategori seçiniz
-          </p>
-        )}
+
+              {/* Altında alt kategori varsa onları listele */}
+              {subCat.categories?.length > 0 ? (
+                <ul className="ml-1 list-disc text-slate-500 space-y-1">
+                  {subCat.categories.map((subSubCat) => (
+                    <li
+                      key={subSubCat.id}
+                      className=" hover:text-slate-900 flex items-center gap-1"
+                      onClick={() =>
+                        alert(`Alt kategori seçildi: ${subSubCat.name}`)
+                      }
+                    >
+                      <IconChevronRight
+                        size={"0.8rem"}
+                        className="text-orange-400 underline"
+                      />
+                      {subSubCat.name}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                // Eğer subCat’in altında başka kategori yoksa kendisini clickable yap
+                <div
+                  className="ml-4 text-slate-500 hover:underline"
+                  onClick={() => alert(`Kategori seçildi: ${subCat.name}`)}
+                >
+                  {subCat.name}
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );
