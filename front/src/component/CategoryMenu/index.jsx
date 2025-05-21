@@ -5,9 +5,9 @@ const Index = ({ data }) => {
   const [activeCategory, setActiveCategory] = useState(null);
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-auto md:h-[28rem] border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white">
+    <div className="flex flex-col md:flex-row w-full h-auto md:h-[28rem] rounded-lg overflow-hidden border border-slate-200 shadow-lg shadow-slate-100 bg-white">
       {/* Sol Ana Kategori Listesi */}
-      <nav className="w-full md:w-1/5 bg-gray-100 border-b md:border-b-0 md:border-r border-gray-300 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-50">
+      <nav className="w-full md:w-1/5  border-b md:border-b-0 md:border-r border-gray-300 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-50">
         {data.map((mainCat) => (
           <div
             key={mainCat.id}
@@ -68,7 +68,10 @@ const Index = ({ data }) => {
                           }
                         }}
                       >
-                        <IconCircleFilled size={"0.8rem"} className="text-blue-400" />
+                        <IconCircleFilled
+                          size={"0.8rem"}
+                          className="text-blue-400"
+                        />
                         {subSubCat.name}
                       </li>
                     ))}

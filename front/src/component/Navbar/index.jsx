@@ -377,13 +377,19 @@ const Index = () => {
               >
                 <div className="flex flex-col gap-2 !p-4">
                   <button
-                    onClick={() => navigate("/login")}
+                    onClick={() => {
+                      navigate("/login");
+                      setAnchorEl(null);
+                    }}
                     className="!py-2 !px-10 bg-orange-500 text-white rounded-lg cursor-pointer hover:bg-orange-600 duration-300"
                   >
                     Giriş Yap
                   </button>
                   <button
-                    onClick={() => navigate("/register")}
+                    onClick={() => {
+                      navigate("/register");
+                      setAnchorEl(null);
+                    }}
                     className="!py-2 !px-10 bg-slate-200 rounded-lg cursor-pointer hover:bg-slate-300 duration-300"
                   >
                     Üye Ol

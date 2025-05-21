@@ -1,159 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import parse from "html-react-parser";
 import {
   IconChevronRight,
   IconHome,
-  IconMinus,
-  IconPlus,
+  IconHome2,
+  IconHomeFilled,
 } from "@tabler/icons-react";
-import { v4 as uuidv4 } from "uuid";
-import { useCardData } from "../../context/CartContext";
+import React, { useState } from "react";
 
-const Index = () => {
-  const params = useParams();
-
-  const { id } = params;
-  const location = useLocation();
-  const product = {
-    Product_code: "YAMA23",
-    Product_id: "1672",
-    Barcode: "",
-    Name: "BASKETBOL-FUTBOL POMPA TOP İĞNESİ TOPA HAVA VURMA İĞNESİ METAL",
-    mainCategory: "Bireysel & Takım Sporları",
-    mainCategory_id: "68",
-    category: "Takım Sporları",
-    category_id: "69",
-    subCategory: "Futbol",
-    subCategory_id: "70",
-    trendyol_salePrice: "194.9",
-    CurrencyType: "TRL",
-    Tax: "20",
-    Stock: "393",
-    Brand: "Sarissa Bisiklet",
-    Image1:
-      "http://cdn1.xmlbankasi.com/p1/bayginnbisiklet/image/data/resimler/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal-420.jpg",
-    Image2:
-      "http://cdn1.xmlbankasi.com/p1/bayginnbisiklet/image/data/resimler/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal-421.jpg",
-    Image3:
-      "http://cdn1.xmlbankasi.com/p1/bayginnbisiklet/image/data/resimler/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal-422.jpg",
-    Image4:
-      "http://cdn1.xmlbankasi.com/p1/bayginnbisiklet/image/data/resimler/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal-423.jpg",
-    Image5:
-      "http://cdn1.xmlbankasi.com/p1/bayginnbisiklet/image/data/resimler/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal-424.jpg",
-    Description:
-      '<DIV style="TEXT-ALIGN: center"><FONT size=4 face="Arial Black">TOP İĞNESİ FUTBOL BASKETBOL BÜTÜN TOP TİPLERİNE UYGUNDUR&nbsp;</FONT> </DIV>\r\n<DIV style="TEXT-ALIGN: center"><FONT size=4 face="Arial Black"><BR></FONT></DIV><IMG src="https://n11scdn2.akamaized.net/a1/org/spor-outdoor/futbol-topu/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal__0202676737632212.jpg"> <IMG src="https://n11scdn2.akamaized.net/a1/org/spor-outdoor/futbol-topu/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal__1076506362465137.jpeg"> <IMG src="https://n11scdn2.akamaized.net/a1/org/spor-outdoor/futbol-topu/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal__0179433884691907.jpeg"> <IMG src="https://n11scdn3.akamaized.net/a1/org/spor-outdoor/futbol-topu/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal__1010612521021118.jpeg"> <IMG src="https://n11scdn.akamaized.net/a1/org/spor-outdoor/futbol-topu/basketbol-futbol-pompa-top-ignesi-topa-hava-vurma-ignesi-metal__0405919352139160.jpeg"> ',
-    variants: {
-      variant: [
-        {
-          spec: {
-            _: "20 ADET",
-            name: "ADET",
-          },
-          variantId: "190",
-          productCode: "YAMA23-190",
-          barcode: "5858016618857",
-          gtin: "",
-          mpn: "",
-          rafno: "",
-          depth: "0",
-          height: "0",
-          width: "0",
-          agirlik: "0",
-          desi: "0",
-          quantity: "100",
-          price: "20.00",
-          hbSaticiStokKodu: "",
-          hbKodu: "",
-        },
-        {
-          spec: {
-            _: "1 ADET",
-            name: "ADET",
-          },
-          variantId: "191",
-          productCode: "YAMA23-191",
-          barcode: "5858016618871",
-          gtin: "",
-          mpn: "",
-          rafno: "",
-          depth: "0",
-          height: "0",
-          width: "0",
-          agirlik: "0",
-          desi: "0",
-          quantity: "93",
-          price: "0.00",
-          hbSaticiStokKodu: "",
-          hbKodu: "",
-        },
-        {
-          spec: {
-            _: "2 ADET",
-            name: "ADET",
-          },
-          variantId: "192",
-          productCode: "YAMA23-192",
-          barcode: "5858016618888",
-          gtin: "",
-          mpn: "",
-          rafno: "",
-          depth: "0",
-          height: "0",
-          width: "0",
-          agirlik: "0",
-          desi: "0",
-          quantity: "100",
-          price: "5.00",
-          hbSaticiStokKodu: "",
-          hbKodu: "",
-        },
-        {
-          spec: {
-            _: "5 ADET",
-            name: "ADET",
-          },
-          variantId: "193",
-          productCode: "YAMA23-193",
-          barcode: "5858016618895",
-          gtin: "",
-          mpn: "",
-          rafno: "",
-          depth: "0",
-          height: "0",
-          width: "0",
-          agirlik: "0",
-          desi: "0",
-          quantity: "4",
-          price: "10.00",
-          hbSaticiStokKodu: "",
-          hbKodu: "",
-        },
-        {
-          spec: {
-            _: "10 ADET",
-            name: "ADET",
-          },
-          variantId: "194",
-          productCode: "YAMA23-194",
-          barcode: "5858016618901",
-          gtin: "",
-          mpn: "",
-          rafno: "",
-          depth: "0",
-          height: "0",
-          width: "0",
-          agirlik: "0",
-          desi: "0",
-          quantity: "96",
-          price: "15.00",
-          hbSaticiStokKodu: "",
-          hbKodu: "",
-        },
-      ],
-    },
-  };
-  const { cardItems, setCardItems } = useCardData();
+export default function ProductDetail({ product }) {
   const [selectedImage, setSelectedImage] = useState(product.Image1);
   const [selectedVariant, setSelectedVariant] = useState(
     product.variants.variant[0]
@@ -175,31 +28,13 @@ const Index = () => {
   const handleAddToCart = () => {
     // Basit bir animasyon başlat
     setIsAnimating(true);
-
-    try {
-      const itemToAdd = {
-        ...product,
-        cardId: uuidv4(),
-        quantity: 1,
-      };
-      const storedCart = localStorage.getItem("cardItem");
-      const existingCart = storedCart ? JSON.parse(storedCart) : [];
-      const updatedCart = [...existingCart, itemToAdd];
-      localStorage.setItem("cardItem", JSON.stringify(updatedCart));
-      setCardItems(updatedCart);
-      setTimeout(() => setIsAnimating(false), 500);
-    } catch (error) {
-      console.error("Sepete eklenirken hata oluştu:", error);
-      localStorage.removeItem("cardItem");
-      setTimeout(() => setIsAnimating(false), 500);
-    }
+    setTimeout(() => setIsAnimating(false), 500);
     console.log("🧡 Sepete eklendi!");
   };
 
   const handleBuyNow = () => {
     console.log("🧡 Şimdi satın al!");
   };
-
 
   return (
     <>
@@ -386,6 +221,4 @@ const Index = () => {
       </div>
     </>
   );
-};
-
-export default Index;
+}
